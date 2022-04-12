@@ -1,4 +1,4 @@
-# ahpo-data-exploration-tools
+# Project description
 This repository includes a set of tools developed for exploring the Henri Poincaré historical corpus.
 The corpus is composed of several articles, books, letters, and gathers information about thousands of individuals.
 Semantic Web technologies have been used for editing this corpus.
@@ -10,9 +10,12 @@ This repository includes simple tools, but which can be of interest for historia
 
 The tools have been developed using classic Web dev technologies (HTML, CSS using Bootstrap, JavaScript using jQuery).
 
-#
+# Distribution generator
 This tool corresponds to the generation of distributions based on the letters writing dates.
 Through the interface, a user can quickly select a correspondant, or a topic and visualize the associated letters distribution. 
 Each distribution can be exported within a CSV file.
 
 
+# Licence 
+This software is governed by the CeCILL licence. 
+See licence.txt for details about this licence.
