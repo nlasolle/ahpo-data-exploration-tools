@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AHP exploration tools</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.6/dist/css/autoComplete.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="favicon.ico" rel="icon" type="image/x-icon" />
+</head>
+
+<body>
+    <!-- Page Content  -->
+    <div id="content">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#tab1" data-bs-toggle="tab"><span
+                                id="formBasedTab"></span>Query generation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tab2" data-bs-toggle="tab">
+                            <span id="sparqlTab">
+                                Document distribution
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tab3" data-bs-toggle="tab"><span id="configurationTab"></span>
+                            Other tool
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tab-content" style="padding-top: 1em;">
+            <div id="tab1" class="tab-pane fade show active">
+                <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                    <div class="form-group">
+                        <!--<h2>Select the type of the targeted resource and fill in the form inputs</h2>-->
+                        <div class="form-group">
+                            <label for="resultsLimitSelect">Type de document</label>
+                            <select class="form-control" id="resultsLimitSelect">
+                                <option>Article</option>
+                                <option>Document</option>
+                                <option>Journal</option>
+                                <option>Lettre</option>
+                                <option>Éditeur</option>
+                                <option>Rapport</option>
+                                <option>Thèse</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-7" style="padding:1%;">
+                                <h3>Critères de recherche</h3>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="firstNameInput">Prénom</label>
+                                        <input type="text" class="form-control" id="firstNameInput" />
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="familyNameInput">Nom</label>
+                                        <input type="text" class="form-control" id="familyNameInput" />
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="nationalitySelect">Nationalité</label>
+                                        <select class="form-control" id="nationalitySelect">
+                                            <option></option>
+                                            <option>Français</option>
+                                            <option>Anglais</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="occupationSelect">Occupation</label>
+                                        <select class="form-control" id="occupationSelect">
+                                            <option></option>
+                                            <option>Mathematician</option>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="placeInput">Lieu de résidence</label>
+                                        <input type="text" class="form-control" id="placeInput" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-2" style="padding-top:1%;">
+                                        <h4>Date de naissance</h4>
+                                    </div>
+                                    <div class="form-group col-md-3" style="padding-top:1%;">
+                                        <select class="form-control" id="resultsLimitSelect">
+                                            <option>Entre</option>
+                                            <option>Avant</option>
+                                            <option>Après</option>
+                                            <option>Égal à</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3" style="padding-top:1%;">
+                                        <input type="date" class="form-control" id="minDateInput" />
+                                    </div>
+                                    <div class="form-group col-md-1" style="padding-top:1%;">
+                                        <h4>et</h4>
+                                    </div>
+                                    <div class="form-group col-md-3" style="padding-top:1%;">
+                                        <input type="date" class="form-control" id="maxDateInput" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div style="padding-top:2%;">
+                                <button id="transformButton" type="button" class="btn btn-outline-primary">
+                                    Rechercher
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab2" class="tab-pane fade">
+                <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label for="placeInput">Correspondant</label>
+                            <input type="text" class="form-control" placeholder="Start typing a name"
+                                id="personAutocompleteInput" />
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label for="placeInput">Thème</label>
+                            <input type="text" class="form-control" id="topicAutocompleteInput"
+                                placeholder="Start typing a topic" />
+                        </div>
+
+                        <button type="button" class="col-md-3 btn  btn-sm btn-rounded btn-outline-primary"
+                            id="generateDistribution">Générer distribution</button>
+
+                    </div>
+
+                    <div style="margin-top:2%; margin-bottom:2%; padding-left:10%; padding-right:10%">
+                        <canvas id="lettersChart"></canvas>
+                    </div>
+
+                    <button type="button" class="col-md-3 btn  btn-sm btn-rounded btn-outline-primary"
+                            id="exportCSV">Exporter en CSV</button>
+                </div>
+            </div>
+
+            <div id="tab3" class="tab-pane fade">
+                <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="chart.js-2.9.4/package/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="js/queriesManager.js"></script>
+    <script type="text/javascript" src="js/chartManager.js"></script>
+    <script type="text/javascript" src="js/autocomplete.js"></script>
+    <script type="text/javascript" src="js/fileManager.js"></script>
+    <script type="text/javascript" src="js/event.js"></script>
+</body>
+
+</html>
