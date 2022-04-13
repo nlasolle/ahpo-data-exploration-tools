@@ -43,29 +43,6 @@ function convertJSONArrayToCSV(args) {
     return result;
 }
 
-function downloadCSV(args) {  
-    var data, filename, link;
-    var csv = convertJSONArrayToCSV({
-        data: args.data
-    });
-
-    if (csv == null) return;
-
- 
-    var title = "query_results_" + getFormattedDate() + ".csv";
-
-    if (!csv.match(/^data:text\/csv/i)) {
-        csv = 'data:text/csv;charset=utf-8,' + csv;
-    }
-
-    data = encodeURI(csv);
-
-    link = document.createElement('a');
-    link.setAttribute('href', data);
-    link.setAttribute('download', title);
-    link.click();
-}
-
 function downloadChartCSV(years, counts) {  
     var data ="",
         link,

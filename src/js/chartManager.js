@@ -1,37 +1,55 @@
 var ctx;
-var myChart = null;
-var counts = [5,6];
+var distributionChart = null;
+var counts = [5, 6];
 var years = [];
+var chartLabel = "Distribution de l'ensemble des lettres de la correspondance";
 
-prepareModalChart(1872, 1912);
-renderChart();
 
-$('#generateDistribution').on('click', function () {
-    renderChart();
-    
-});
-
-function prepareModalChart(min, max){
+function prepareModalChart(min, max) {
     years = [];
-    for(var i = min; i<max; i++){
-         years.push(i);
+    for (var i = min; i < max; i++) {
+        years.push(i);
     }
- }
+}
 
-function renderChart(){
-    if (myChart != null) {
-        myChart.destroy();
+/**
+ * Prepare chart data
+ * @param {String} description  The chart description
+ * @param {*} bindings the SPARQL query bindings (letters count + year for each row)
+ */
+function createDistributionData(description, bindings) {
+    counts = [];
+
+    years.forEach(year => {
+        let binding = bindings.find(obj => {
+            return parseInt(obj.year.value) === year;
+        });
+
+        if (binding) {
+            counts.push(parseInt(binding.lettersCount.value));
+        } else {
+            counts.push(0);
+        }
+    });
+
+    chartLabel = description;
+    renderChart();
+}
+
+function renderChart() {
+    if (distributionChart != null) {
+        distributionChart.destroy();
     }
-    
+
     ctx = document.getElementById('lettersChart').getContext('2d');
 
-    myChart = new Chart("lettersChart", {
+    distributionChart = new Chart("lettersChart", {
         type: 'bar',
 
         data: {
             labels: years,
             datasets: [{
-                label: "Distribution",
+                label: chartLabel,
                 data: counts,
                 backgroundColor: 'rgba(110, 211, 155, 0.5)',
                 borderWidth: 1
@@ -50,6 +68,6 @@ function renderChart(){
         }
     });
 
-   
-    myChart.render();
+
+    distributionChart.render();
 }
