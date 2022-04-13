@@ -1,11 +1,22 @@
 
 $(document).ready(function () {
+  $('#correspondentTable').DataTable({
+    pagingType: "simple", // "simple" option for 'Previous' and 'Next' buttons only
+    bFilter: true,
+    autoWidth: false,
+    class: "display"
+  });
+
+  $('#correspondentsTable tbody').on('click', 'tr', function () {
+    
+  });
 
   //Only active if one of the input fields have been filled
   $('#generateDistribution').prop('disabled', true);
 
   getPersonsLabels();
   getTopicsLabels();
+  getCorrespondentsStatistics();
   prepareModalChart(1872, 1912);
   getInitialChartData();
   $('#personAutocompleteInput').val("");
@@ -45,3 +56,31 @@ $(document).ready(function () {
     }
   });
 });
+
+function updateCorrespondentTable(results) {
+
+  var count = 1;
+  var tableContent = [];
+  var row;
+  console.log(results);
+
+  results.forEach(obj => {
+    row = [];
+    row.push(count);
+    row.push(obj.title.value);
+    row.push(obj.lettersCount.value);
+    row.push(obj.description.value);
+
+    count++;
+    tableContent.push(row);
+  });
+
+
+  $("#correspondentsTable").dataTable().fnClearTable();
+
+  if (tableContent.length != 0) {
+    $("#correspondentsTable").dataTable().fnAddData(tableContent);
+    $("#correspondentsTable tr").css("cursor", "pointer");
+  }
+}
+

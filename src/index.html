@@ -13,6 +13,7 @@
         href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.6/dist/css/autoComplete.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
 </head>
 
@@ -23,18 +24,27 @@
             <div class="col-lg-12">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#tab1" data-bs-toggle="tab"><span
-                                id="formBasedTab"></span>Génération de requêtes</a>
+                        <a class="nav-link active" aria-current="page" href="#tab1" data-bs-toggle="tab">
+                            Génération de requêtes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#tab2" data-bs-toggle="tab">
-                            <span id="sparqlTab">
-                                Distribution des lettres
+                            Distribution des lettres
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#tab3" data-bs-toggle="tab"><span id="configurationTab"></span>
-                            Autres outils
+                        <a class="nav-link" href="#tab3" data-bs-toggle="tab">
+                            Distribution des articles
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tab4" data-bs-toggle="tab">
+                            Statistiques sur les correspondants
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tab5" data-bs-toggle="tab">
+                            Carte des principaux correspondants
                         </a>
                     </li>
                 </ul>
@@ -145,7 +155,8 @@
                         </div>
 
                         <button type="button" class="col-md-2 btn  btn-sm btn-rounded btn-outline-primary"
-                            style="max-height:35px;margin-top:25px;" id="generateDistribution">Générer distribution</button>
+                            style="max-height:35px;margin-top:25px;" id="generateDistribution">Générer
+                            distribution</button>
 
                     </div>
 
@@ -156,13 +167,31 @@
                     <button type="button" class="col-md-3 btn  btn-sm btn-rounded btn-outline-success"
                         id="exportCSV">Exporter en CSV</button>
 
-                        <button type="button" class="col-md-3 btn  btn-sm btn-rounded btn-outline-secondary"
+                    <button type="button" class="col-md-3 btn  btn-sm btn-rounded btn-outline-secondary"
                         id="exportPNG">Exporter l'image</button>
                 </div>
             </div>
 
             <div id="tab3" class="tab-pane fade">
                 <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                
+                </div>
+            </div>
+
+            <div id="tab4" class="tab-pane fade">
+                <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                    <table class="table table-hover" id="correspondentsTable">
+                        <thead>
+                          <tr>
+                            <th scope='col'>#</th>
+                            <th scope='col'>Correspondant</th>
+                            <th scope='col'>Nombre de lettres échangées</th>
+                            <th scope='col'>Description</th>
+                          </tr>
+                        </thead>
+                        <tbody id ="correspondentsTableBody">
+                        </tbody>
+                      </table>
                 </div>
             </div>
 
@@ -175,7 +204,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="js/queriesManager.js"></script>
     <script type="text/javascript" src="js/chartManager.js"></script>
     <script type="text/javascript" src="js/autocomplete.js"></script>

@@ -1,13 +1,13 @@
 var ctx;
 var distributionChart = null;
-var counts = [5, 6];
+var counts = [];
 var years = [];
 var chartLabel = "Distribution de l'ensemble des lettres de la correspondance";
 
 
 function prepareModalChart(min, max) {
     years = [];
-    for (var i = min; i < max; i++) {
+    for (var i = min; i <= max; i++) {
         years.push(i);
     }
 }

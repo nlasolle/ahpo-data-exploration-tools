@@ -253,3 +253,44 @@ function updateCombinedChart(person, topic) {
 
     request.send(JSON.stringify(query));
 }
+
+
+/**
+ * Send a SPARQL query to retrieve statistics about correspondents
+ */
+function getCorrespondentsStatistics() {
+
+    "use strict";
+    const query = "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#> \n" +
+        "PREFIX dcterms: <http://purl.org/dc/terms/> \n" +
+        "SELECT ?title ?description (COUNT(?letter) as ?lettersCount) \n" +
+        "WHERE {\n" +
+        "   ?letter ahpo:correspondent ?person .\n" +
+        "   ?person dcterms:title ?title .\n" +
+        "   ?person dcterms:description ?description .\n" +
+        "   ?letter ahpo:writingDate ?date\n" +
+        "}\n" +
+        "GROUP BY ?title ?description\n" +
+        "ORDER BY DESC(?lettersCount)";
+
+    var request = new XMLHttpRequest();
+
+    console.log(query);
+
+    request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
+    request.setRequestHeader("Content-type", "application/sparql-query");
+
+    request.onload = function () {
+        if (request.status == 200) {
+            let response = JSON.parse(this.response);
+            let bindings = response.results.bindings
+            updateCorrespondentTable(bindings);
+        } else {
+            console.log('An error occured when retrieving correspondents statistics' +
+                ' from the SPARQL endpoint with URL '
+                + SPARQL_ENDPOINT);
+        }
+    };
+
+    request.send(JSON.stringify(query));
+}
