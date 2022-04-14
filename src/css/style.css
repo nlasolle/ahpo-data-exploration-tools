@@ -1,13 +1,9 @@
 /*Now the CSS*/
 
-* {
-    margin: 0;
-    padding: 0;
-}
-
 /*
     DEMO STYLE
 */
+
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 body {
@@ -49,9 +45,12 @@ a, a:hover, a:focus {
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
+.odd {
+    background-color: rgba(212, 204, 204, 0.2) !important;
+}
 
 #content {
-    height: 400px;
+    height: 600px;
     width: 100%;
     padding: 20px;
     margin: 0 auto;
