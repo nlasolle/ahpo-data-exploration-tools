@@ -1,12 +1,14 @@
-var tableContent;
-var tableCount;
-$(document).ready(function () {
 
+var tableContent, tableCount, map;
+
+$(document).ready(function () {
 
   $('#correspondentTable').DataTable({
     autoWidth: true,
     bFilter: true
   });
+
+  initMap();
 
   $('#correspondentsTable tbody').on('click', 'tr', function () {
 
@@ -15,6 +17,7 @@ $(document).ready(function () {
   //Only active if one of the input fields have been filled
   $('#generatePersonDistribution').prop('disabled', true);
   $('#generateTopicDistribution').prop('disabled', true);
+  $('#generatePersonMarkers').prop('disabled', true);
 
   getPersonsLabels();
   getTopicsLabels();
@@ -88,6 +91,23 @@ $(document).ready(function () {
     }
   });
 
+  //Get chart data as CSV values
+  $('#generatePersonMarkers').click(function (e) {
+    let personLabel= $('#mapPersonAutocompleteInput').val();
+
+    let person = persons.find(p => {
+      return p.label == personLabel;
+    });
+
+    if (person != '' && person.birthPlace) {
+      let id = person.birthPlace.substring(person.birthPlace.lastIndexOf("/")+1);
+      getGeonamesData(person, id);
+    } else {
+      alert("No information about the birth place of " + personLabel + " exists in the database.")
+    }
+
+  });
+
   $('#generateTopicDistribution').click(function (e) {
     /*We need to check the status of each input field
      Because we don't want to use the value 
@@ -99,6 +119,11 @@ $(document).ready(function () {
       updateTopicChart(selectedTopic);
     }
   });
+
+  $("a[href='#tab5']").on('shown.bs.tab', function (e) {
+    map.invalidateSize();
+  });
+
 });
 
 function updateCorrespondentsTable(results) {
@@ -169,7 +194,6 @@ function setCorrespondentCitations(results, index) {
     }
   });
 
-  console.log("CPT FINAL  " + cpt);
   $("#correspondentsTable").dataTable().fnClearTable();
 
   if (tableContent.length != 0) {

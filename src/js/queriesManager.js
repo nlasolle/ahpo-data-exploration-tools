@@ -1,7 +1,7 @@
 const SPARQL_ENDPOINT = "http://localhost:3030/hp_corpus/";
 
 var persons = [], topics = [];
-var personAutocomplete, topicAutocomplete;
+var personAutocomplete, topicAutocomplete, mapPersonAutocomplete;
 var selectedPerson, selectedTopic;
 
 /**
@@ -10,7 +10,16 @@ var selectedPerson, selectedTopic;
  */
 function getPersonsLabels() {
     "use strict";
-    const query = "PREFIX dcterms: <http://purl.org/dc/terms/> PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#> SELECT ?person ?title WHERE {?person a ahpo:Person . ?person dcterms:title ?title}";
+    const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+    "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
+    "PREFIX ahpot: <http://henripoincare.fr/ahpot#>\n" +
+    "SELECT ?person ?title ?birthPlace ?deathPlace WHERE {\n " +
+    "   ?person a ahpo:Person . \n" +
+    "   ?person dcterms:title ?title .\n" +
+    "   OPTIONAL{?person ahpot:birthPlace ?birthPlace}\n" +
+    "}";
+
+    console.log(query);
     var request = new XMLHttpRequest();
 
     request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
@@ -24,7 +33,8 @@ function getPersonsLabels() {
             for (let i in bindings) {
                 let person = {
                     label: bindings[i].title.value,
-                    value: bindings[i].person.value
+                    value: bindings[i].person.value,
+                    birthPlace: bindings[i].birthPlace ? bindings[i].birthPlace.value : null
                 };
                 persons.push(person);
             }
@@ -40,12 +50,22 @@ function getPersonsLabels() {
                 }
             });
 
+            mapPersonAutocomplete = new Autocomplete(document.getElementById('mapPersonAutocompleteInput'), {
+                data: persons,
+                threshold: 1,
+                maximumItems: 6,
+                onSelectItem: ({ label, value }) => {
+                    selectedPerson = { label, value };
+                    $('#generatePersonMarkers').prop('disabled', false);
+                }
+            });
+
         } else {
             console.log('An error occured when retrieving persons from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
         }
     };
 
-    request.send(JSON.stringify(query));
+    request.send();
 }
 
 /**
@@ -88,7 +108,7 @@ function getTopicsLabels() {
         }
     };
 
-    request.send(JSON.stringify(query));
+    request.send();
 }
 
 /**
@@ -126,7 +146,7 @@ function getArticlesData() {
         }
     };
 
-    request.send(JSON.stringify(query));
+    request.send();
 }
 
 /**
@@ -162,7 +182,7 @@ function getLettersData() {
         }
     };
 
-    request.send(JSON.stringify(query));
+    request.send();
 }
 
 /**
@@ -202,7 +222,7 @@ function updatePersonChart(person) {
         }
     };
 
-    request.send(JSON.stringify(query));
+    request.send();
 }
 
 /**
@@ -244,7 +264,7 @@ function updateTopicChart(topic) {
         }
     };
 
-    request.send(JSON.stringify(query));
+    request.send();
 }
 
 /**
@@ -289,7 +309,7 @@ function updateCombinedChart(person, topic) {
         }
     };
 
-    request.send(JSON.stringify(query));
+    request.send();
 }
 
 
@@ -329,7 +349,7 @@ function getCorrespondentsStatistics() {
         }
     };
 
-    request.send(JSON.stringify(query));
+    request.send();
 }
 
 /**
@@ -372,5 +392,5 @@ function getCorrespondentsCitations(property) {
         }
     };
 
-    request.send(JSON.stringify(query));
+    request.send();
 }
