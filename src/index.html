@@ -13,7 +13,7 @@
         href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.6/dist/css/autoComplete.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
 </head>
 
@@ -142,39 +142,60 @@
             <div id="tab2" class="tab-pane fade">
                 <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
                     <div class="row">
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-4">
                             <label for="placeInput">Correspondant</label>
                             <input type="text" class="form-control" placeholder="Rechercher une personne"
                                 id="personAutocompleteInput" />
                         </div>
 
-                        <div class="form-group col-md-5">
+                        <button type="button" class="col-md-2 btn  btn-sm btn-rounded btn-outline-primary"
+                            style="max-height:35px;margin-top:25px;" id="generatePersonDistribution">Générer
+                            distribution</button>
+
+                        <div class="form-group col-md-4">
                             <label for="placeInput">Thème</label>
                             <input type="text" class="form-control" id="topicAutocompleteInput"
                                 placeholder="Rechercher un thème" />
                         </div>
 
                         <button type="button" class="col-md-2 btn  btn-sm btn-rounded btn-outline-primary"
-                            style="max-height:35px;margin-top:25px;" id="generateDistribution">Générer
+                            style="max-height:35px;margin-top:25px;" id="generateTopicDistribution">Générer
                             distribution</button>
-
                     </div>
 
-                    <div style="margin-top:2%; margin-bottom:2%; padding-left:14%; padding-right:14%">
+                    <div style="margin-top:2%; margin-bottom:2%; padding-left:11%; padding-right:11%">
                         <canvas id="lettersChart"></canvas>
                     </div>
+                    <div class="row" style="padding:2%">
+                        <div class="col-md-12" style="text-align: center;">
+                            <button type="button" class="col-md-3 btn  btn-md btn-rounded btn-outline-primary"
+                                id="reinitChart">Réinitialiser les données</button>
 
-                    <button type="button" class="col-md-3 btn  btn-sm btn-rounded btn-outline-success"
-                        id="exportCSV">Exporter en CSV</button>
+                            <button type="button" class="col-md-3 btn  btn-md btn-rounded btn-outline-success"
+                                id="exportCSV">Exporter en CSV</button>
 
-                    <button type="button" class="col-md-3 btn  btn-sm btn-rounded btn-outline-secondary"
-                        id="exportPNG">Exporter l'image</button>
+                            <button type="button" class="col-md-3 btn  btn-md btn-rounded btn-outline-success"
+                                id="exportPNG">Exporter l'image</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div id="tab3" class="tab-pane fade">
                 <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
-                
+                    <div style="margin-top:2%; margin-bottom:2%; padding-left:11%; padding-right:11%">
+                        <canvas id="articlesChart"></canvas>
+                    </div>
+
+                    <div class="row" style="padding:2%">
+                        <div class="col-md-12" style="text-align: center;">    
+                            <button type="button" class="col-md-3 btn  btn-md btn-rounded btn-outline-success"
+                                id="exportArticlesCSV">Exporter en CSV</button>
+
+                            <button type="button" class="col-md-3 btn  btn-md btn-rounded btn-outline-success"
+                                id="exportArticlesPNG">Exporter l'image</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -182,16 +203,16 @@
                 <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
                     <table class="table table-hover" id="correspondentsTable">
                         <thead>
-                          <tr>
-                            <th scope='col'>#</th>
-                            <th scope='col'>Correspondant</th>
-                            <th scope='col'>Nombre de lettres échangées</th>
-                            <th scope='col'>Description</th>
-                          </tr>
+                            <tr>
+                                <th scope='col'>#</th>
+                                <th scope='col'>Correspondant</th>
+                                <th scope='col'>Nombre de lettres échangées</th>
+                                <th scope='col'>Description</th>
+                            </tr>
                         </thead>
-                        <tbody id ="correspondentsTableBody">
+                        <tbody id="correspondentsTableBody">
                         </tbody>
-                      </table>
+                    </table>
                 </div>
             </div>
 
@@ -205,12 +226,13 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+        src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="js/event.js"></script>
     <script type="text/javascript" src="js/queriesManager.js"></script>
     <script type="text/javascript" src="js/chartManager.js"></script>
     <script type="text/javascript" src="js/autocomplete.js"></script>
     <script type="text/javascript" src="js/fileManager.js"></script>
-    <script type="text/javascript" src="js/event.js"></script>
+
 </body>
 
 </html>

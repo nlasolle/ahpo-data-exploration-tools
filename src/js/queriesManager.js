@@ -36,7 +36,7 @@ function getPersonsLabels() {
                 maximumItems: 6,
                 onSelectItem: ({ label, value }) => {
                     selectedPerson = { label, value };
-                    $('#generateDistribution').prop('disabled', false);
+                    $('#generatePersonDistribution').prop('disabled', false);
                 }
             });
 
@@ -80,7 +80,7 @@ function getTopicsLabels() {
                 maximumItems: 6,
                 onSelectItem: ({ value }) => {
                     selectedTopic = value;
-                    $('#generateDistribution').prop('disabled', false);
+                    $('#generateTopicDistribution').prop('disabled', false);
                 }
             });
         } else {
@@ -92,13 +92,51 @@ function getTopicsLabels() {
 }
 
 /**
- * Send a SPARQL query to retrieve distribution related the whole correspondence.
+ * Send a SPARQL query to retrieve distribution related to publication dates of articles
  */
-function getInitialChartData() {
+ function getArticlesData() {
 
     "use strict";
     const query = "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#> \n" +
-        "SELECT (COUNT(?letter) as ?lettersCount) ?year \n" +
+        "SELECT (COUNT(?article) as ?count) ?year \n" +
+        "WHERE {\n" +
+        "   ?article a ahpo:Article .\n" +
+        "   ?article ahpo:authoredBy <http://henripoincare.fr/api/items/843> .\n" +
+        "   ?article ahpo:publicationDate ?date\n" +
+        "}\n" +
+        "GROUP BY (SUBSTR(?date, 0, 5) AS ?year)\n" +
+        "ORDER BY ASC(?year)";
+    var request = new XMLHttpRequest();
+
+    console.log(query);
+
+    request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
+    request.setRequestHeader("Content-type", "application/sparql-query");
+
+    request.onload = function () {
+        if (request.status == 200) {
+            let response = JSON.parse(this.response);
+            let bindings = response.results.bindings
+            initDistributionData("Les articles rédigés par Poincaré selon leur date de publication",
+                bindings, "articles");
+        } else {
+            console.log('An error occured when retrieving articles publication dates' +
+                ' from the SPARQL endpoint with URL '
+                + SPARQL_ENDPOINT);
+        }
+    };
+
+    request.send(JSON.stringify(query));
+}
+
+/**
+ * Send a SPARQL query to retrieve distribution related the whole correspondence.
+ */
+function getLettersData() {
+
+    "use strict";
+    const query = "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#> \n" +
+        "SELECT (COUNT(?letter) as ?count) ?year \n" +
         "WHERE {\n" +
         "   ?letter ahpo:writingDate ?date\n" +
         "}\n" +
@@ -115,8 +153,8 @@ function getInitialChartData() {
         if (request.status == 200) {
             let response = JSON.parse(this.response);
             let bindings = response.results.bindings
-            createDistributionData("L'ensemble des lettres de la correspondance",
-                bindings);
+            initDistributionData("L'ensemble des lettres de la correspondance",
+                bindings, "letters");
         } else {
             console.log('An error occured when retrieving writing dates' +
                 ' from the SPARQL endpoint with URL '
@@ -136,7 +174,7 @@ function updatePersonChart(person) {
 
     "use strict";
     const query = "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#> \n" +
-        "SELECT (COUNT(?letter) as ?lettersCount) ?year \n" +
+        "SELECT (COUNT(?letter) as ?count) ?year \n" +
         "WHERE {\n" +
         "   ?letter ahpo:correspondent <" + person.value + "> .\n" +
         "   ?letter ahpo:writingDate ?date\n" +
@@ -177,7 +215,7 @@ function updateTopicChart(topic) {
     "use strict";
     const query = "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#> \n" +
         "PREFIX dcterms: <http://purl.org/dc/terms/> \n" +
-        "SELECT (COUNT(?letter) as ?lettersCount) ?year \n" +
+        "SELECT (COUNT(?letter) as ?count) ?year \n" +
         "WHERE {\n" +
         "   ?letter dcterms:subject ?topic .\n" +
         "   ?letter ahpo:writingDate ?date\n" +
@@ -220,7 +258,7 @@ function updateCombinedChart(person, topic) {
     "use strict";
     const query = "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#> \n" +
         "PREFIX dcterms: <http://purl.org/dc/terms/> \n" +
-        "SELECT (COUNT(?letter) as ?lettersCount) ?year \n" +
+        "SELECT (COUNT(?letter) as ?count) ?year \n" +
         "WHERE {\n" +
         "   ?letter ahpo:correspondent <" + person.value + "> .\n" +
         "   ?letter dcterms:subject ?topic .\n" +
@@ -263,7 +301,7 @@ function getCorrespondentsStatistics() {
     "use strict";
     const query = "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#> \n" +
         "PREFIX dcterms: <http://purl.org/dc/terms/> \n" +
-        "SELECT ?title ?description (COUNT(?letter) as ?lettersCount) \n" +
+        "SELECT ?title ?description (COUNT(?letter) as ?count) \n" +
         "WHERE {\n" +
         "   ?letter ahpo:correspondent ?person .\n" +
         "   ?person dcterms:title ?title .\n" +
@@ -271,7 +309,7 @@ function getCorrespondentsStatistics() {
         "   ?letter ahpo:writingDate ?date\n" +
         "}\n" +
         "GROUP BY ?title ?description\n" +
-        "ORDER BY DESC(?lettersCount)";
+        "ORDER BY DESC(?count)";
 
     var request = new XMLHttpRequest();
 
@@ -284,7 +322,7 @@ function getCorrespondentsStatistics() {
         if (request.status == 200) {
             let response = JSON.parse(this.response);
             let bindings = response.results.bindings
-            updateCorrespondentTable(bindings);
+            updateCorrespondentsTable(bindings);
         } else {
             console.log('An error occured when retrieving correspondents statistics' +
                 ' from the SPARQL endpoint with URL '
