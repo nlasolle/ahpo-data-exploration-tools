@@ -1,6 +1,7 @@
-var tableContent = [];
+var tableContent;
 var tableCount;
 $(document).ready(function () {
+
 
   $('#correspondentTable').DataTable({
     autoWidth: true,
@@ -17,7 +18,22 @@ $(document).ready(function () {
 
   getPersonsLabels();
   getTopicsLabels();
-  getCorrespondentsStatistics();
+
+  //Statistics about correspondent are saved to nav local storage
+  tableContent = JSON.parse(localStorage.getItem('correspondentStorage'));
+  if (!tableContent) {
+    console.log("Correspondent statistics not found on the local storage.");
+    getCorrespondentsStatistics();
+  } else {
+    console.log("Correspondent statistics found on the local storage.");
+    $("#correspondentsTable").dataTable().fnClearTable();
+
+    if (tableContent.length != 0) {
+      $("#correspondentsTable").dataTable().fnAddData(tableContent);
+      $("#correspondentsTable tr").css("cursor", "pointer");
+    }
+  }
+
   prepareModalChart(1872, 1912);
   getLettersData();
   getArticlesData();
@@ -98,6 +114,7 @@ function updateCorrespondentsTable(results) {
     row.push(obj.title.value);
     row.push(obj.count.value);
     row.push("0");
+    row.push("0");
     row.push(obj.description.value);
 
     tableCount++;
@@ -111,22 +128,19 @@ function updateCorrespondentsTable(results) {
     $("#correspondentsTable").dataTable().fnAddData(tableContent);
     $("#correspondentsTable tr").css("cursor", "pointer");
   }
-  getCorrespondentsCitations();
+  getCorrespondentsCitations("ahpo:citeName");
 }
 
-function setCorrespondentCitations(results) {
+function setCorrespondentCitations(results, index) {
 
-  var row;
-  console.log(tableContent[1][1]);
   let nbValues = parseInt(tableCount);
   let cpt = 0;
   results.forEach(res => {
     let found = false;
-    for (var i = 0 ; i < 200 ; i++) {
-      console.log("cpt " + cpt);
+    for (var i = 0; i < nbValues - 1; i++) {
       cpt++;
       if (tableContent[i][1] === res.title.value) {
-        tableContent[i][3] = res.count.value;
+        tableContent[i][index] = res.count.value;
         found = true;
         break;
       }
@@ -137,18 +151,35 @@ function setCorrespondentCitations(results) {
       newRow.push(tableCount);
       newRow.push(res.title.value);
       newRow.push("0");
-      newRow.push(res.count.value);
+
+      /* First case is when we are settings citations for transcription
+         Second case is when we are settings apparat citations, and when the person has not been
+         cited in any letter */
+      if (index === 3) {
+        newRow.push(res.count.value);
+        newRow.push("0");
+      } else {
+        newRow.push("0");
+        newRow.push(res.count.value);
+      }
+
       newRow.push(res.description.value);
       tableCount++;
       tableContent.push(newRow);
     }
   });
 
+  console.log("CPT FINAL  " + cpt);
   $("#correspondentsTable").dataTable().fnClearTable();
 
   if (tableContent.length != 0) {
+    localStorage.setItem('correspondentStorage', JSON.stringify(tableContent));
     $("#correspondentsTable").dataTable().fnAddData(tableContent);
     $("#correspondentsTable tr").css("cursor", "pointer");
+  }
+
+  if (index === 3) {
+    getCorrespondentsCitations("ahpo:citeApparatName");
   }
 }
 

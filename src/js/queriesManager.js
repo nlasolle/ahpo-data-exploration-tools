@@ -335,14 +335,14 @@ function getCorrespondentsStatistics() {
 /**
  * Send a SPARQL query to retrieve correspondents citations (within letters transcriptions) 
  */
-function getCorrespondentsCitations() {
+function getCorrespondentsCitations(property) {
 
     "use strict";
     const query = "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#> \n" +
         "PREFIX dcterms: <http://purl.org/dc/terms/> \n" +
         "SELECT ?title ?description (COUNT(?letter) as ?count) \n" +
         "WHERE {\n" +
-        "   ?letter ahpo:citeName ?person .\n" +
+        "   ?letter " + property + " ?person .\n" +
         "   ?person dcterms:title ?title .\n" +
         "   ?person dcterms:description ?description\n" +
         "}\n" +
@@ -359,7 +359,12 @@ function getCorrespondentsCitations() {
         if (request.status == 200) {
             let response = JSON.parse(this.response);
             let bindings = response.results.bindings
-            setCorrespondentCitations(bindings);
+            if (property === "ahpo:citeName") {
+                setCorrespondentCitations(bindings, 3);
+            } else {
+                setCorrespondentCitations(bindings, 4);
+            }
+
         } else {
             console.log('An error occured when retrieving correspondents citations' +
                 ' from the SPARQL endpoint with URL '
