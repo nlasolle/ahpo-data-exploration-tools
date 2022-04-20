@@ -131,8 +131,7 @@ function updateCorrespondentsTable(results) {
 
   tableCount = 1;
   tableContent = [];
-  var row;
-  console.log(results);
+  let row;
 
   results.forEach(obj => {
     row = [];

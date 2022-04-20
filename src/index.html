@@ -95,20 +95,35 @@
                                 <label for="publicationDate">Date de publication</label>
                                 <div id="publicationDate" class="form-group col-md-2">
                                     <select class="form-select" id="publicationDateSelect">
-                                        <option>Entre</option>
-                                        <option>Avant</option>
-                                        <option>Après</option>
+                                        <option value="between">Entre</option>
+                                        <option value="before">Avant</option>
+                                        <option value="after">Après</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <input type="date" class="form-control" id="minPublicationDateInput" />
+
+
+                                <div id="pivotPublicationDateForm" class="form-group col-md-3">
+                                    <input type="date" class="form-control" id="pivotPublicationDateInput" />
                                 </div>
-                                <div class="form-group col-md-1" style="text-align:center">
-                                    <h4>et</h4>
+
+                                <div id="betweenPublicationDateForm" class="form-group col-md-8">
+                                    <div class="row" style="padding:0%">
+                                        <div class="form-group col-md-3">
+                                            <input type="date" class="form-control" id="minPublicationDateInput" />
+                                        </div>
+                                        <div class="form-group col-md-1" style="text-align:center">
+                                            <h4>et</h4>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <input type="date" class="form-control" id="maxPublicationDateInput" />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <input type="date" class="form-control" id="maxPublicationDateInput" />
-                                </div>
+                            </div>
+                            <div style="padding:1%;">
+                                <button id="articleSearchButton" type="button" class="btn btn-outline-primary">
+                                    Rechercher
+                                </button>
                             </div>
 
                         </div>
@@ -131,7 +146,11 @@
                                 <input type="text" class="form-control" placeholder="Rechercher une personne"
                                     id="documentPersonAutocompleteInput" />
                             </div>
-
+                            <div style="padding:1%;">
+                                <button id="documentSearchButton" type="button" class="btn btn-outline-primary">
+                                    Rechercher
+                                </button>
+                            </div>
                         </div>
 
                         <div id="letterBlock" class="row">
@@ -151,6 +170,12 @@
                                 <label for="placeInput">Correspondant</label>
                                 <input type="text" class="form-control" placeholder="Rechercher une personne"
                                     id="correspondentAutocompleteInput" />
+                            </div>
+
+                            <div style="padding:1%;">
+                                <button id="letterSearchButton" type="button" class="btn btn-outline-primary">
+                                    Rechercher
+                                </button>
                             </div>
 
                         </div>
@@ -213,14 +238,32 @@
                                 </div>
 
                             </div>
-                            <div style="padding-top:2%;">
-                                <button id="transformButton" type="button" class="btn btn-outline-primary">
+                            <div style="padding-top:1%;">
+                                <button id="personSearchButton" type="button" class="btn btn-outline-primary">
                                     Rechercher
                                 </button>
                             </div>
 
                         </div>
 
+
+                        <h3>Requête SPARQL</h3>
+                        <h3>Résultats</h3>
+                        <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                            <table class="table table-hover display" id="resultsTable">
+                                <thead>
+                                    <tr id="resultsTableHeader">
+                                        <th scope='col'>#</th>
+                                        <th scope='col'>#</th>
+                                        <th scope='col'>#</th>
+                                        <th scope='col'>#</th>
+                                        <th scope='col'>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -339,8 +382,9 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
-    <script type="text/javascript" src="js/event.js"></script>
+    <script type="text/javascript" src="js/parameters.js"></script>
     <script type="text/javascript" src="js/formEvent.js"></script>
+    <script type="text/javascript" src="js/event.js"></script>
     <script type="text/javascript" src="js/queriesManager.js"></script>
     <script type="text/javascript" src="js/mapManager.js"></script>
     <script type="text/javascript" src="js/chartManager.js"></script>

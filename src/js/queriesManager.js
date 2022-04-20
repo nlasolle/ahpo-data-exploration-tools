@@ -11,13 +11,13 @@ var selectedPerson, selectedTopic;
 function getPersonsLabels() {
     "use strict";
     const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
-    "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
-    "PREFIX ahpot: <http://henripoincare.fr/ahpot#>\n" +
-    "SELECT ?person ?title ?birthPlace ?deathPlace WHERE {\n " +
-    "   ?person a ahpo:Person . \n" +
-    "   ?person dcterms:title ?title .\n" +
-    "   OPTIONAL{?person ahpot:birthPlace ?birthPlace}\n" +
-    "}";
+        "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
+        "PREFIX ahpot: <http://henripoincare.fr/ahpot#>\n" +
+        "SELECT ?person ?title ?birthPlace ?deathPlace WHERE {\n " +
+        "   ?person a ahpo:Person . \n" +
+        "   ?person dcterms:title ?title .\n" +
+        "   OPTIONAL{?person ahpot:birthPlace ?birthPlace}\n" +
+        "}";
 
     console.log(query);
     var request = new XMLHttpRequest();
@@ -57,6 +57,15 @@ function getPersonsLabels() {
                 onSelectItem: ({ label, value }) => {
                     selectedPerson = { label, value };
                     $('#generatePersonMarkers').prop('disabled', false);
+                }
+            });
+
+            articlePersonAutocomplete = new Autocomplete(document.getElementById('articlePersonAutocompleteInput'), {
+                data: persons,
+                threshold: 1,
+                maximumItems: 6,
+                onSelectItem: ({ label, value }) => {
+                    articleAuthor = { label, value };
                 }
             });
 
@@ -389,6 +398,33 @@ function getCorrespondentsCitations(property) {
             console.log('An error occured when retrieving correspondents citations' +
                 ' from the SPARQL endpoint with URL '
                 + SPARQL_ENDPOINT);
+        }
+    };
+
+    request.send();
+}
+
+
+/**
+ * Launch a SPARQL query and put the content in a DataTable
+ */
+function getQueryResults(type, query) {
+    "use strict";;
+    var request = new XMLHttpRequest();
+
+    request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
+    request.setRequestHeader("Content-type", "application/sparql-query");
+
+    request.onload = function () {
+        if (request.status == 200) {
+            let response = JSON.parse(this.response);
+            let bindings = response.results.bindings;
+            console.log(bindings);
+            updateResultsTableContent(type, bindings);
+
+        } else {
+            console.log('An error occured when executing the query for the' +
+                'SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
         }
     };
 
