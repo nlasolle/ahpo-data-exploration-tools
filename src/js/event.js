@@ -41,6 +41,7 @@ $(document).ready(function () {
   getLettersData();
   getArticlesData();
   $('#personAutocompleteInput').val("");
+  $('#mapPersonAutocompleteInput').val("");
   $('#topicAutocompleteInput').val("");
 
   //Get chart data as CSV values
@@ -93,14 +94,14 @@ $(document).ready(function () {
 
   //Get chart data as CSV values
   $('#generatePersonMarkers').click(function (e) {
-    let personLabel= $('#mapPersonAutocompleteInput').val();
+    let personLabel = $('#mapPersonAutocompleteInput').val();
 
     let person = persons.find(p => {
       return p.label == personLabel;
     });
 
     if (person != '' && person.birthPlace) {
-      let id = person.birthPlace.substring(person.birthPlace.lastIndexOf("/")+1);
+      let id = person.birthPlace.substring(person.birthPlace.lastIndexOf("/") + 1);
       getGeonamesData(person, id);
     } else {
       alert("No information about the birth place of " + personLabel + " exists in the database.")

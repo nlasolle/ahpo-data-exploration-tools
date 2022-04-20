@@ -11,7 +11,7 @@
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.6/dist/css/autoComplete.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -57,23 +57,106 @@
         <div class="tab-content" style="padding-top: 1em;">
             <div id="tab1" class="tab-pane fade show active">
                 <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
-                    <div class="form-group">
-                        <!--<h2>Select the type of the targeted resource and fill in the form inputs</h2>-->
-                        <div class="form-group">
-                            <label for="resultsLimitSelect">Type de document</label>
-                            <select class="form-control" id="resultsLimitSelect">
-                                <option>Article</option>
-                                <option>Document</option>
-                                <option>Journal</option>
-                                <option>Lettre</option>
-                                <option>Éditeur</option>
-                                <option>Rapport</option>
-                                <option>Thèse</option>
-                            </select>
+                    <div class="row">
+                        <h3>Veuillez sélectionner le type de ressource</h3>
+                        <div class="form-group" style="padding:1%;">
+                            <!--<h2>Select the type of the targeted resource and fill in the form inputs</h2>-->
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="typeRadioOptions"
+                                    id="articleCheckbox" value="Article">
+                                <label class="form-check-label" for="articleCheckbox">Article</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="typeRadioOptions"
+                                    id="documentCheckbox" value="Document">
+                                <label class="form-check-label" for="documentCheckbox">Document</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="typeRadioOptions" id="letterCheckbox"
+                                    value="Letter">
+                                <label class="form-check-label" for="letterCheckbox">Lettre</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="typeRadioOptions" id="personCheckbox"
+                                    value="Person">
+                                <label class="form-check-label" for="personCheckbox">Personne</label>
+                            </div>
                         </div>
-                        <div class="row">
+                        <h3>Critères de recherche</h3>
+                        <div id="articleBlock">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="placeInput">Auteur</label>
+                                    <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                        id="articlePersonAutocompleteInput" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="publicationDate">Date de publication</label>
+                                <div id="publicationDate" class="form-group col-md-2">
+                                    <select class="form-select" id="publicationDateSelect">
+                                        <option>Entre</option>
+                                        <option>Avant</option>
+                                        <option>Après</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <input type="date" class="form-control" id="minPublicationDateInput" />
+                                </div>
+                                <div class="form-group col-md-1" style="text-align:center">
+                                    <h4>et</h4>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <input type="date" class="form-control" id="maxPublicationDateInput" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="documentBlock" class="row">
+                            <div class="form-group col-md-4">
+                                <label for="placeInput">Auteur</label>
+                                <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                    id="documentPersonAutocompleteInput" />
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="placeInput">Auteur</label>
+                                <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                    id="documentPersonAutocompleteInput" />
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="placeInput">Auteur</label>
+                                <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                    id="documentPersonAutocompleteInput" />
+                            </div>
+
+                        </div>
+
+                        <div id="letterBlock" class="row">
+                            <div class="form-group col-md-4">
+                                <label for="placeInput">Expéditeur</label>
+                                <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                    id="senderAutocompleteInput" />
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="placeInput">Destinataire</label>
+                                <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                    id="recipientAutocompleteInput" />
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="placeInput">Correspondant</label>
+                                <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                    id="correspondentAutocompleteInput" />
+                            </div>
+
+                        </div>
+
+                        <div id="personBlock" class="row">
                             <div class="form-group col-md-7" style="padding:1%;">
-                                <h3>Critères de recherche</h3>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="firstNameInput">Prénom</label>
@@ -231,7 +314,13 @@
 
                         <button type="button" class="col-md-2 btn  btn-sm btn-rounded btn-outline-primary"
                             style="max-height:35px;margin-top:25px;" id="generatePersonMarkers">Rechercher
-                    </button>
+                        </button>
+                        <div class="col-md-1">
+
+                            <i id="infoBox" class="fa-regular fa-file-circle-info" data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="Un marqueur sera ajouté sur le lieu de naissance s'il est connu."></i>
+                        </div>
                     </div>
                     <div id="map"></div>
                 </div>
@@ -251,6 +340,7 @@
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
     <script type="text/javascript" src="js/event.js"></script>
+    <script type="text/javascript" src="js/formEvent.js"></script>
     <script type="text/javascript" src="js/queriesManager.js"></script>
     <script type="text/javascript" src="js/mapManager.js"></script>
     <script type="text/javascript" src="js/chartManager.js"></script>

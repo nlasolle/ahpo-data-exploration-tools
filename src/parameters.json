@@ -1,0 +1,8 @@
+{
+    "resultsTableColumns" : {
+        "article": ["rdfs:label", "ahpo:authoredBy","ahpo:publicationDate"],
+        "document": ["rdfs:label", "ahpo:authoredBy","dcterms:date"],
+        "letter": ["rdfs:label", "ahpo:writingDate", "ahpo:incipit"],
+        "person": ["rdfs:label", "bio:birth","bio:death", "dcterms:description"]
+    }
+}

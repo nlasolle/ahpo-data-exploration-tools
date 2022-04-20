@@ -36,7 +36,7 @@ a, a:hover, a:focus {
 }
 
 #content {
-    height: 800px;
+    height: 400px;
     width: 100%;
     padding: 20px;
     margin: 0 auto;
@@ -49,4 +49,8 @@ a, a:hover, a:focus {
 #map { 
     height: 900px;
     margin-top: 1%;
+}
+
+.row {
+    padding:1%;
 }

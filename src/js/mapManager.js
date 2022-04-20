@@ -18,8 +18,8 @@ function getGeonamesData(person, id) {
                 lat: results.lat,
                 lng: results.lng
             }
-            let content = "<h5>" + person.label + "</h5><br>" +
-            "<h6> Birth place:" + results.name + ", " + results.countryName + "</h6>";
+            let content = "<h5>" + person.label + "</h5>" +
+            "<h6>" + results.name + ", " + results.countryName + "</h6>";
 
             addMarker(coordinates, content)
         } else {
@@ -42,6 +42,9 @@ function initMap() {
         id: 'mapbox/streets-v11',
         tileSize: 512,
         zoomOffset: -1,
+        zoomSnap: 0.25,
+    zoomDelta: 1,
+    wheelPxPerZoomLevel: 60
     }).addTo(map);
 
     map.zoomControl.remove();
