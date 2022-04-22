@@ -129,10 +129,7 @@ function updateResultsTableContent(type, results) {
     let tableCount = 1;
     let tableContent = [];
     let first = true;
-    let headerRow = "<th scope='col'>#</th>\n"+
-    "<th scope='col'>label</th>" +
-    "<th scope='col'>author</th>";
-    $("#resultsTableHeader").html(headerRow);
+
     results.forEach(obj => {
 
         //First line? Then we create the header
@@ -141,7 +138,9 @@ function updateResultsTableContent(type, results) {
             Object.keys(obj).forEach(key => {
                 let headerRow = [];
                 if (key != type) {
-                    headerRow.push(key);
+                    let column = {}
+                    column.title = key;
+                    headerRow.push(column)
                 }
             });
         }
@@ -160,7 +159,7 @@ function updateResultsTableContent(type, results) {
         tableContent.push(row);
     });
 
-    
+    $("#resultsTable > thead").empty();
     $("#resultsTable").dataTable().fnClearTable();
 
     if (tableContent.length != 0) {
