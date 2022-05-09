@@ -13,6 +13,8 @@
         href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.6/dist/css/autoComplete.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="codemirror/codemirror-5.58.2/lib/codemirror.css">
+    <link rel="stylesheet" href="codemirror/codemirror-5.58.2/addon/fullscreen.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -42,12 +44,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#tab4" data-bs-toggle="tab">
-                            Statistiques sur les correspondants
+                            Statistiques sur les personnes
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#tab5" data-bs-toggle="tab">
-                            Carte des principaux correspondants
+                            Lieux de naissance
                         </a>
                     </li>
                 </ul>
@@ -83,186 +85,222 @@
                             </div>
                         </div>
                         <h3>Critères de recherche</h3>
-                        <div id="articleBlock">
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="placeInput">Auteur</label>
-                                    <input type="text" class="form-control" placeholder="Rechercher une personne"
-                                        id="articlePersonAutocompleteInput" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label for="publicationDate">Date de publication</label>
-                                <div id="publicationDate" class="form-group col-md-2">
-                                    <select class="form-select" id="publicationDateSelect">
-                                        <option value="between">Entre</option>
-                                        <option value="before">Avant</option>
-                                        <option value="after">Après</option>
-                                    </select>
-                                </div>
+                        <div class="card">
 
-
-                                <div id="pivotPublicationDateForm" class="form-group col-md-3">
-                                    <input type="date" class="form-control" id="pivotPublicationDateInput" />
-                                </div>
-
-                                <div id="betweenPublicationDateForm" class="form-group col-md-8">
-                                    <div class="row" style="padding:0%">
-                                        <div class="form-group col-md-3">
-                                            <input type="date" class="form-control" id="minPublicationDateInput" />
-                                        </div>
-                                        <div class="form-group col-md-1" style="text-align:center">
-                                            <h4>et</h4>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <input type="date" class="form-control" id="maxPublicationDateInput" />
+                            <div class="card-body">
+                                <div id="articleBlock">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="placeInput">Auteur</label>
+                                            <input type="text" class="form-control"
+                                                placeholder="Rechercher une personne"
+                                                id="articlePersonAutocompleteInput" />
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <label for="publicationDate">Date de publication</label>
+                                        <div id="publicationDate" class="form-group col-md-2">
+                                            <select class="form-select" id="publicationDateSelect">
+                                                <option value="between">Entre</option>
+                                                <option value="before">Avant</option>
+                                                <option value="after">Après</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div id="pivotPublicationDateForm" class="form-group col-md-3">
+                                            <input type="date" class="form-control" id="pivotPublicationDateInput" />
+                                        </div>
+
+                                        <div id="betweenPublicationDateForm" class="form-group col-md-8">
+                                            <div class="row" style="padding:0%">
+                                                <div class="form-group col-md-3">
+                                                    <input type="date" class="form-control"
+                                                        id="minPublicationDateInput" />
+                                                </div>
+                                                <div class="form-group col-md-1" style="text-align:center">
+                                                    <h4>et</h4>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <input type="date" class="form-control"
+                                                        id="maxPublicationDateInput" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="padding:1%;">
+                                        <button id="articleSearchButton" type="button" class="btn btn-outline-primary">
+                                            Générer et exécuter requête
+                                        </button>
+                                    </div>
+
                                 </div>
-                            </div>
-                            <div style="padding:1%;">
-                                <button id="articleSearchButton" type="button" class="btn btn-outline-primary">
-                                    Rechercher
-                                </button>
-                            </div>
 
-                        </div>
-
-                        <div id="documentBlock" class="row">
-                            <div class="form-group col-md-4">
-                                <label for="placeInput">Auteur</label>
-                                <input type="text" class="form-control" placeholder="Rechercher une personne"
-                                    id="documentPersonAutocompleteInput" />
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="placeInput">Auteur</label>
-                                <input type="text" class="form-control" placeholder="Rechercher une personne"
-                                    id="documentPersonAutocompleteInput" />
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="placeInput">Auteur</label>
-                                <input type="text" class="form-control" placeholder="Rechercher une personne"
-                                    id="documentPersonAutocompleteInput" />
-                            </div>
-                            <div style="padding:1%;">
-                                <button id="documentSearchButton" type="button" class="btn btn-outline-primary">
-                                    Rechercher
-                                </button>
-                            </div>
-                        </div>
-
-                        <div id="letterBlock" class="row">
-                            <div class="form-group col-md-4">
-                                <label for="placeInput">Expéditeur</label>
-                                <input type="text" class="form-control" placeholder="Rechercher une personne"
-                                    id="senderAutocompleteInput" />
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="placeInput">Destinataire</label>
-                                <input type="text" class="form-control" placeholder="Rechercher une personne"
-                                    id="recipientAutocompleteInput" />
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="placeInput">Correspondant</label>
-                                <input type="text" class="form-control" placeholder="Rechercher une personne"
-                                    id="correspondentAutocompleteInput" />
-                            </div>
-
-                            <div style="padding:1%;">
-                                <button id="letterSearchButton" type="button" class="btn btn-outline-primary">
-                                    Rechercher
-                                </button>
-                            </div>
-
-                        </div>
-
-                        <div id="personBlock" class="row">
-                            <div class="form-group col-md-7" style="padding:1%;">
-                                <div class="row">
+                                <div id="documentBlock" class="row">
                                     <div class="form-group col-md-4">
-                                        <label for="firstNameInput">Prénom</label>
-                                        <input type="text" class="form-control" id="firstNameInput" />
+                                        <label for="placeInput">Auteur</label>
+                                        <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                            id="documentPersonAutocompleteInput" />
                                     </div>
+
                                     <div class="form-group col-md-4">
-                                        <label for="familyNameInput">Nom</label>
-                                        <input type="text" class="form-control" id="familyNameInput" />
+                                        <label for="placeInput">Auteur</label>
+                                        <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                            id="documentPersonAutocompleteInput" />
                                     </div>
+
                                     <div class="form-group col-md-4">
-                                        <label for="nationalitySelect">Nationalité</label>
-                                        <select class="form-control" id="nationalitySelect">
-                                            <option></option>
-                                            <option>Français</option>
-                                            <option>Anglais</option>
-                                        </select>
+                                        <label for="placeInput">Auteur</label>
+                                        <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                            id="documentPersonAutocompleteInput" />
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="occupationSelect">Occupation</label>
-                                        <select class="form-control" id="occupationSelect">
-                                            <option></option>
-                                            <option>Mathematician</option>
-                                            <option></option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="placeInput">Lieu de résidence</label>
-                                        <input type="text" class="form-control" id="placeInput" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-2" style="padding-top:1%;">
-                                        <h4>Date de naissance</h4>
-                                    </div>
-                                    <div class="form-group col-md-3" style="padding-top:1%;">
-                                        <select class="form-control" id="resultsLimitSelect">
-                                            <option>Entre</option>
-                                            <option>Avant</option>
-                                            <option>Après</option>
-                                            <option>Égal à</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-3" style="padding-top:1%;">
-                                        <input type="date" class="form-control" id="minDateInput" />
-                                    </div>
-                                    <div class="form-group col-md-1" style="padding-top:1%;">
-                                        <h4>et</h4>
-                                    </div>
-                                    <div class="form-group col-md-3" style="padding-top:1%;">
-                                        <input type="date" class="form-control" id="maxDateInput" />
+                                    <div style="padding:1%;">
+                                        <button id="documentSearchButton" type="button" class="btn btn-outline-primary">
+                                            Générer et exécuter requête
+                                        </button>
                                     </div>
                                 </div>
 
-                            </div>
-                            <div style="padding-top:1%;">
-                                <button id="personSearchButton" type="button" class="btn btn-outline-primary">
-                                    Rechercher
-                                </button>
-                            </div>
+                                <div id="letterBlock" class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="placeInput">Expéditeur</label>
+                                        <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                            id="senderAutocompleteInput" />
+                                    </div>
 
+                                    <div class="form-group col-md-4">
+                                        <label for="placeInput">Destinataire</label>
+                                        <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                            id="recipientAutocompleteInput" />
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="placeInput">Correspondant</label>
+                                        <input type="text" class="form-control" placeholder="Rechercher une personne"
+                                            id="correspondentAutocompleteInput" />
+                                    </div>
+
+                                    <div style="padding:1%;">
+                                        <button id="letterSearchButton" type="button" class="btn btn-outline-primary">
+                                            Générer et exécuter requête
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                                <div id="personBlock" class="row">
+                                    <div class="form-group col-md-7" style="padding:1%;">
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <label for="firstNameInput">Prénom</label>
+                                                <input type="text" class="form-control" id="firstNameInput" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="familyNameInput">Nom</label>
+                                                <input type="text" class="form-control" id="familyNameInput" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="nationalitySelect">Nationalité</label>
+                                                <select class="form-control" id="nationalitySelect">
+                                                    <option></option>
+                                                    <option>Français</option>
+                                                    <option>Anglais</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <label for="occupationSelect">Occupation</label>
+                                                <select class="form-control" id="occupationSelect">
+                                                    <option></option>
+                                                    <option>Mathematician</option>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="placeInput">Lieu de résidence</label>
+                                                <input type="text" class="form-control" id="placeInput" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-2" style="padding-top:1%;">
+                                                <h4>Date de naissance</h4>
+                                            </div>
+                                            <div class="form-group col-md-3" style="padding-top:1%;">
+                                                <select class="form-control" id="resultsLimitSelect">
+                                                    <option value="between">Entre</option>
+                                                    <option value="before">Avant</option>
+                                                    <option value="after">Après</option>
+                                                    <option value="equalsTo">Égal à</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-3" style="padding-top:1%;">
+                                                <input type="date" class="form-control" id="minDateInput" />
+                                            </div>
+                                            <div class="form-group col-md-1" style="padding-top:1%;">
+                                                <h4>et</h4>
+                                            </div>
+                                            <div class="form-group col-md-3" style="padding-top:1%;">
+                                                <input type="date" class="form-control" id="maxDateInput" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div style="padding-top:1%;">
+                                        <button id="personSearchButton" type="button" class="btn btn-outline-primary">
+                                            Générer et exécuter requête
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
-
                         <h3>Requête SPARQL</h3>
+                        <div class="card">
+
+
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <form><textarea id="queryInput">
+#The query is updated after a change on any form input
+PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?s
+WHERE {
+
+}                                                            
+                        </textarea></form>
+                                    <div style="padding:1%">
+                                        <button id="saveQueryButton" type="button" class="btn btn-outline-primary">
+                                            Exporter requête
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <h3>Résultats</h3>
-                        <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
-                            <table class="table table-hover display" id="resultsTable">
-                                <thead>
-                                    <tr id="resultsTableHeader">
-                                        <th scope='col'>#</th>
-                                        <th scope='col'>#</th>
-                                        <th scope='col'>#</th>
-                                        <th scope='col'>#</th>
-                                        <th scope='col'>#</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="resultsTableBody">
-                                </tbody>
-                            </table>
+                        <div class="card">
+
+                            <div class="card-body">
+                                <div class="container-fluid"
+                                    style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                                    <table class="table table-hover display" id="resultsTable">
+                                        <thead>
+                                            <tr id="resultsTableHeader">
+                                                <th scope='col'>#</th>
+                                                <th scope='col'>#</th>
+                                                <th scope='col'>#</th>
+                                                <th scope='col'>#</th>
+                                                <th scope='col'>#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="resultsTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -390,7 +428,19 @@
     <script type="text/javascript" src="js/chartManager.js"></script>
     <script type="text/javascript" src="js/autocomplete.js"></script>
     <script type="text/javascript" src="js/fileManager.js"></script>
-
+    <script src="codemirror/codemirror-5.58.2/lib/codemirror.js"></script>
+    <script src="codemirror/codemirror-5.58.2/addon/edit/matchbrackets.js"></script>
+    <script src="codemirror/codemirror-5.58.2/addon/autorefresh.js"></script>
+    <script src="codemirror/codemirror-5.58.2/addon/fullscreen.js"></script>
+    <script type="text/javascript" src="js/sparql.js"></script>
+    <script>
+        var queryEditor = CodeMirror.fromTextArea(document.getElementById("queryInput"), {
+            mode: "application/sparql-query",
+            autoRefresh: true,
+            matchBrackets: true,
+            readOnly: 'nocursor'
+        });
+    </script>
 </body>
 
 </html>

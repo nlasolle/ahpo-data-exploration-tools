@@ -83,7 +83,7 @@ $(document).ready(function () {
         resultsTableColumns.article.forEach(property => {
             variableName = "?" + property.substring(property.lastIndexOf(":") + 1);
             variables += " " + variableName;
-            body += "\tOPTIONAL{ ?article " + property + " " + variableName + "} .\n";
+            body += "\tOPTIONAL { ?article " + property + " " + variableName + "} .\n";
         });
 
         //Adding the constraint based on users input
@@ -94,15 +94,28 @@ $(document).ready(function () {
             body += "\t?article ahpo:authoredBy <" + articleAuthor.value + "> .\n";
         }
 
+        switch($("#resultsLimitSelect").val()){
+            case 'between' : {
+               
+            }
+            case 'before' : {
+                body += "\t?article ahpo:publicationDate <" + articleAuthor.value + "> .\n";
+            }
+        }
+         /* Publication date, before a given value or between two dates */
+         console.log();
+        
+
         //Construct the full SPARQL query
-        let query = prefixHeader +
-            "SELECT " + variables + " WHERE {\n" +
+        let query = prefixHeader + "\n" +
+            "SELECT" + variables + " WHERE {\n" +
             body +
             "\n}";
 
-        console.log(query);
-        //Print the query on the form
 
+        //Print the query on the form
+        updateQueryInput(query);
+        
         //Send the query to the SPARQL endpoint
         getQueryResults("article", query);
 
@@ -111,11 +124,11 @@ $(document).ready(function () {
         //Prepare distribution
     });
 
-    $('#personSearchButton').on('click', function () {
+    $('#documentSearchButton').on('click', function () {
 
     });
 
-    $('#personSearchButton').on('click', function () {
+    $('#letterSearchButton').on('click', function () {
 
     });
 
@@ -124,6 +137,9 @@ $(document).ready(function () {
     });
 });
 
+function updateQueryInput(query){
+    queryEditor.setValue(query);
+}
 
 function updateResultsTableContent(type, results) {
     let tableCount = 1;
