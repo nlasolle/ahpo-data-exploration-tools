@@ -1,9 +1,10 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
 body {
     font-family: ''Poppins', sans-serif';
     background: #fafafa;
     overflow-y: hidden;
-    overflow-x: hidden; 
+    overflow-x: hidden;
 }
 
 td:hover {
@@ -46,16 +47,26 @@ a, a:hover, a:focus {
     overflow-y: visible;
 }
 
-#map { 
+#map {
     height: 900px;
     margin-top: 1%;
 }
 
 .row {
-    padding:1%;
+    padding: 1%;
 }
 
-  .CodeMirror {
+
+table {
+    table-layout: fixed;
+}
+
+td {
+    white-space: pre-wrap !important;
+    word-wrap:break-word;
+}
+
+.CodeMirror {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     height: 50px;
@@ -64,7 +75,8 @@ a, a:hover, a:focus {
 
 .card {
     margin-bottom: 1.5em;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
-    border-radius: 15px; /* 5px rounded corners */
+    border-radius: 15px;
+    /* 5px rounded corners */
 }

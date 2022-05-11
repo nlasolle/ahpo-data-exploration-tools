@@ -1,7 +1,10 @@
 var articlePersonAutocomplete;
 var articleAuthor;
+var query;
 
 $(document).ready(function () {
+
+    refreshSPARQLQuery();
 
     /*Management of form blocks, which are hidden/shown depending on the selected type
       Default is set to article */
@@ -46,18 +49,14 @@ $(document).ready(function () {
             $("#documentBlock").hide();
             $("#personBlock").show();
         }
-    });
 
-    //Date management, seems not to be working using jQuery?
-    document.getElementById("minPublicationDateInput").valueAsDate = new Date(1874, 1)
-    document.getElementById("maxPublicationDateInput").valueAsDate = new Date(1913, 1)
-    document.getElementById("pivotPublicationDateInput").valueAsDate = new Date(1890, 1)
+        refreshSPARQLQuery();
+    });
 
     //Article form management
     $("#pivotPublicationDateForm").hide();
 
     $('#publicationDateSelect').on('change', function () {
-        alert(this.value);
         if (this.value == "between") {
             $("#pivotPublicationDateForm").hide();
             $("#betweenPublicationDateForm").show();
@@ -71,80 +70,154 @@ $(document).ready(function () {
     $('#resultsTable').DataTable({
         autoWidth: true,
         bFilter: true
-      });
+    });
 
-    $('#articleSearchButton').on('click', function () {
+    $('#executeQueryButton').on('click', function () {
 
-        //Generate the query
-        let variables = " ?article", body = "";
-
-        //What we want to retrieve for each result, here for each article
-        //We use the OPTIONAL clause because we don't to include these properties as contraint
-        resultsTableColumns.article.forEach(property => {
-            variableName = "?" + property.substring(property.lastIndexOf(":") + 1);
-            variables += " " + variableName;
-            body += "\tOPTIONAL { ?article " + property + " " + variableName + "} .\n";
-        });
-
-        //Adding the constraint based on users input
-
-        /* This value is an IRI, based on the label selected by the user in the input,
-           see queriesManager.js getPersonsLabels() function for details */
-        if (articleAuthor) {
-            body += "\t?article ahpo:authoredBy <" + articleAuthor.value + "> .\n";
-        }
-
-        switch($("#resultsLimitSelect").val()){
-            case 'between' : {
-               
-            }
-            case 'before' : {
-                body += "\t?article ahpo:publicationDate <" + articleAuthor.value + "> .\n";
-            }
-        }
-         /* Publication date, before a given value or between two dates */
-         console.log();
-        
-
-        //Construct the full SPARQL query
-        let query = prefixHeader + "\n" +
-            "SELECT" + variables + " WHERE {\n" +
-            body +
-            "\n}";
-
-
-        //Print the query on the form
-        updateQueryInput(query);
-        
-        //Send the query to the SPARQL endpoint
+        //Send the query to the SPARQL endpoint and update results Table
         getQueryResults("article", query);
 
-        //Put the results in the table
-
         //Prepare distribution
+        console.log(query);
     });
 
-    $('#documentSearchButton').on('click', function () {
-
-    });
-
-    $('#letterSearchButton').on('click', function () {
-
-    });
-
-    $('#personSearchButton').on('click', function () {
-
-    });
 });
 
-function updateQueryInput(query){
+
+function refreshSPARQLQuery() {
+    query = "";
+
+    console.log($("#typeRadioOptions").val());
+    //Generates the new SPARQL query
+    switch ($("input[type=radio][name=typeRadioOptions]").val()) {
+        case 'Article': {
+            query = generateArticleQuery();
+            break;
+        }
+        case 'Document': {
+            query = generateDocumentQuery();
+            break;
+        }
+        case 'Letter': {
+            query = generateLetterQuery();
+            break;
+        }
+        case 'Person': {
+            query = generatePersonQuery();
+        }
+    }
+
+    //Update the query text area
+    if (query) {
+        updateQueryInput(query);
+    }
+}
+function updateQueryInput(query) {
     queryEditor.setValue(query);
+}
+
+function generateArticleQuery() {
+
+    //Generate the query
+    let variables = " ?article", body = "", optionalBody = "";
+
+    //Always include the label
+    variables += " ?titre";
+    optionalBody += "\tOPTIONAL { ?article rdfs:label ?titre } .\n";
+
+    //At least one constraint --> The document is an article 
+
+    body += "\t?article a ahpo:Article . \n";
+
+    //Then adding the constraint based on users input
+
+    /* This value is an IRI, based on the label selected by the user in the input,
+       see queriesManager.js getPersonsLabels() function for details */
+    if (articleAuthor) {
+        body += "\t?article ahpo:authoredBy <" + articleAuthor.value + "> .\n";
+    } else {
+        variables += " ?auteur";
+        optionalBody += "\tOPTIONAL { ?article ahpo:authoredBy [dcterms:title ?auteur] } .\n";
+    }
+
+    console.log($("#publicationDateSelect").val());
+
+    switch ($("#publicationDateSelect").val()) {
+        case 'between': {
+            if ($("#minPublicationYearInput").val() &&
+                $("#maxPublicationYearInput").val()) {
+                body += "\t?article ahpo:publicationDate ?dateDePublication .\n" +
+                    "\tFILTER(xsd:integer(SUBSTR(?dateDePublication, 0, 5)) >= "
+                    + $("#minPublicationYearInput").val() + "\n" +
+                    "\t\t && xsd:integer(SUBSTR(?dateDePublication, 0, 5)) <= " +
+                    + $("#maxPublicationYearInput").val() + ")\n";
+            } else {
+                variables += " ?dateDePublication";
+                optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
+            }
+            break;
+
+        }
+        case 'before': {
+            if ($("#pivotPublicationYearInput").val()) {
+                body += "\t?article ahpo:publicationDate ?dateDePublication .\n" +
+                    "\tFILTER( xsd:integer(SUBSTR(?dateDePublication, 0, 5)) <= " +
+                    + $("#pivotPublicationYearInput").val() + " ) \n";
+            }
+            else {
+                variables += " ?dateDePublication";
+                optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
+            }
+            break;
+
+        }
+
+        case 'after': {
+            if ($("#pivotPublicationYearInput").val()) {
+                body += "\t?article ahpo:publicationDate ?dateDePublication .\n" +
+                    "\tFILTER( xsd:integer(SUBSTR(?dateDePublication, 0, 5)) >= " +
+                    + $("#pivotPublicationYearInput").val() + " ) \n";
+            }
+            else {
+                variables += " ?dateDePublication";
+                optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
+            }
+            break;
+
+        }
+
+        case 'equalsTo': {
+            if ($("#pivotPublicationYearInput").val()) {
+                body += "\t?article ahpo:publicationDate ?dateDePublication .\n" +
+                    "\tFILTER( xsd:integer(SUBSTR(?dateDePublication, 0, 5)) = " +
+                    + $("#pivotPublicationYearInput").val() + " ) \n";
+            }
+            else {
+                variables += " ?dateDePublication";
+                optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
+            }
+            break;
+
+        }
+    }
+
+
+    //Construct the full SPARQL query
+    let query = prefixHeader + "\n" +
+        "SELECT" + variables + " WHERE {\n" +
+        body +
+        optionalBody +
+        "\n}\n" + 
+        "ORDER BY ?publicationDate";
+
+    return query;
 }
 
 function updateResultsTableContent(type, results) {
     let tableCount = 1;
     let tableContent = [];
     let first = true;
+    let headerRow;
 
     results.forEach(obj => {
 
@@ -152,21 +225,24 @@ function updateResultsTableContent(type, results) {
         if (first) {
             first = false;
             Object.keys(obj).forEach(key => {
-                let headerRow = [];
+                headerRow = [];
                 if (key != type) {
                     let column = {}
                     column.title = key;
-                    headerRow.push(column)
+                    headerRow.push(column);
                 }
             });
+
+            tableContent.push(headerRow);
         }
+
+
         //Creating data row
         let row = [];
         row.push(tableCount);
 
         Object.keys(obj).forEach(key => {
             if (key != type) {
-                console.log(obj[key].value);
                 row.push(obj[key].value);
             }
         });

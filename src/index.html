@@ -104,26 +104,33 @@
                                                 <option value="between">Entre</option>
                                                 <option value="before">Avant</option>
                                                 <option value="after">Après</option>
+                                                <option value="equalsTo">Égale à</option>
                                             </select>
                                         </div>
 
 
                                         <div id="pivotPublicationDateForm" class="form-group col-md-3">
-                                            <input type="date" class="form-control" id="pivotPublicationDateInput" />
+                                            <input type="number" class="form-control" id="pivotPublicationYearInput" 
+                                                     min="1800" max="1950" />
+                                            <!--<input type="date" class="form-control" id="pivotPublicationDateInput" />-->
                                         </div>
 
                                         <div id="betweenPublicationDateForm" class="form-group col-md-8">
                                             <div class="row" style="padding:0%">
                                                 <div class="form-group col-md-3">
-                                                    <input type="date" class="form-control"
-                                                        id="minPublicationDateInput" />
+                                                    <input type="number" class="form-control" id="minPublicationYearInput" 
+                                                    min="1800" max="1950" />
+                                                    <!--<input type="date" class="form-control"
+                                                        id="minPublicationDateInput" />-->
                                                 </div>
                                                 <div class="form-group col-md-1" style="text-align:center">
                                                     <h4>et</h4>
                                                 </div>
                                                 <div class="form-group col-md-3">
-                                                    <input type="date" class="form-control"
-                                                        id="maxPublicationDateInput" />
+                                                    <input type="number" class="form-control" id="maxPublicationYearInput" 
+                                                     min="1800" max="1950" />
+                                                    <!--<input type="date" class="form-control"
+                                                        id="maxPublicationDateInput" />-->
                                                 </div>
                                             </div>
                                         </div>
@@ -231,7 +238,7 @@
                                                     <option value="between">Entre</option>
                                                     <option value="before">Avant</option>
                                                     <option value="after">Après</option>
-                                                    <option value="equalsTo">Égal à</option>
+                                                    <option value="equalsTo">Égale à</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-3" style="padding-top:1%;">
@@ -261,19 +268,14 @@
                             <div class="card-body">
 
                                 <div class="form-group">
-                                    <form><textarea id="queryInput">
-#The query is updated after a change on any form input
-PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>
-PREFIX dcterms: <http://purl.org/dc/terms/>
-
-SELECT ?s
-WHERE {
-
-}                                                            
+                                    <form><textarea id="queryInput">                                                            
                         </textarea></form>
                                     <div style="padding:1%">
-                                        <button id="saveQueryButton" type="button" class="btn btn-outline-primary">
-                                            Exporter requête
+                                        <button id="executeQueryButton" type="button" class="btn btn-outline-primary">
+                                            Exécuter la requête
+                                        </button>
+                                        <button id="saveQueryButton" type="button" class="btn btn-outline-secondary">
+                                            Exporter la requête
                                         </button>
                                     </div>
                                 </div>
@@ -290,10 +292,9 @@ WHERE {
                                         <thead>
                                             <tr id="resultsTableHeader">
                                                 <th scope='col'>#</th>
-                                                <th scope='col'>#</th>
-                                                <th scope='col'>#</th>
-                                                <th scope='col'>#</th>
-                                                <th scope='col'>#</th>
+                                                <th scope='col'>Titre</th>
+                                                <th scope='col'>Auteur</th>
+                                                <th scope='col'>Année de publication</th>
                                             </tr>
                                         </thead>
                                         <tbody id="resultsTableBody">

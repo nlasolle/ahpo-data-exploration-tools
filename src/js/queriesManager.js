@@ -66,6 +66,7 @@ function getPersonsLabels() {
                 maximumItems: 6,
                 onSelectItem: ({ label, value }) => {
                     articleAuthor = { label, value };
+                    refreshSPARQLQuery();
                 }
             });
 
@@ -411,7 +412,7 @@ function getCorrespondentsCitations(property) {
 function getQueryResults(type, query) {
     "use strict";;
     var request = new XMLHttpRequest();
-
+    console.log("FINAL QUERY " + query);
     request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
     request.setRequestHeader("Content-type", "application/sparql-query");
 
