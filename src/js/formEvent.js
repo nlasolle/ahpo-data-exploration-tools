@@ -1,5 +1,11 @@
+const ARTICLE_FORM = 1,
+    DOCUMENT_FORM = 2,
+    LETTER_FORM = 3,
+    BOOK_FORM = 4,
+    PERSON_FORM = 5;
+
 var articlePersonAutocomplete;
-var articleAuthor;
+var articleAuthor, selectedTopic, selectedJournal;
 var query;
 
 $(document).ready(function () {
@@ -17,11 +23,14 @@ $(document).ready(function () {
 
     //Remove previous input values when reloading page, but keep them when changing radio button values for ressource type
     $('#articlePersonAutocompleteInput').val("");
-    articleAuthor = null;
     $('#documentPersonAutocompleteInput').val("");
     $('#senderAutocompleteInput').val("");
     $('#recipientAutocompleteInput').val("");
     $('#correspondentAutocompleteInput').val("");
+
+    articleAuthor = null;
+    selectedTopic = null;
+    selectedJournal = null;
 
     $('input[type=radio][name=typeRadioOptions]').change(function () {
         if (this.value == 'Article') {
@@ -33,14 +42,14 @@ $(document).ready(function () {
         }
         else if (this.value == 'Document') {
             $("#articleBlock").hide();
-            $("#letterBlock").show();
-            $("#documentBlock").hide();
+            $("#letterBlock").hide();
+            $("#documentBlock").show();
             $("#personBlock").hide();
         }
         else if (this.value == 'Letter') {
             $("#articleBlock").hide();
-            $("#letterBlock").hide();
-            $("#documentBlock").show();
+            $("#letterBlock").show();
+            $("#documentBlock").hide();
             $("#personBlock").hide();
         }
         else if (this.value == 'Person') {
@@ -64,15 +73,27 @@ $(document).ready(function () {
             $("#pivotPublicationDateForm").show();
             $("#betweenPublicationDateForm").hide();
         }
+
+        refreshSPARQLQuery();
+    });
+
+    $("input").bind('change input', function () {
+        refreshSPARQLQuery();
+    });
+
+    $("input").bind('blur', function () {
+        console.log("BLURAAA");
+        refreshSPARQLQuery();
     });
 
     //Results table initialization
     $('#resultsTable').DataTable({
         autoWidth: true,
-        bFilter: true
+        bFilter: true,
+        fixedColumns: false
     });
 
-    $('#executeQueryButton').on('click', function () {
+    $('#articleSearchButton').on('click', function () {
 
         //Send the query to the SPARQL endpoint and update results Table
         getQueryResults("article", query);
@@ -81,13 +102,16 @@ $(document).ready(function () {
         console.log(query);
     });
 
+    //Tags manager for input
+    initTagsInput("articleTitleInput", "Saisir un terme");
 });
 
 
 function refreshSPARQLQuery() {
     query = "";
-
+    checkEmptyInputs(ARTICLE_FORM);
     console.log($("#typeRadioOptions").val());
+
     //Generates the new SPARQL query
     switch ($("input[type=radio][name=typeRadioOptions]").val()) {
         case 'Article': {
@@ -112,8 +136,56 @@ function refreshSPARQLQuery() {
         updateQueryInput(query);
     }
 }
+
+function checkEmptyInputs(documentType) {
+
+    switch (documentType) {
+        case ARTICLE_FORM: {
+            if ($("#articlePersonAutocompleteInput").val() == "") {
+                articleAuthor = null;
+            }
+
+            if ($("#articleTopicAutocompleteInput").val() == "") {
+                selectedTopic = null;
+            }
+
+            if ($("#articleJournalAutocompleteInput").val() == "") {
+                selectedJournal = null;
+            }
+            break;
+        }
+
+        default: break;
+    }
+
+}
+
 function updateQueryInput(query) {
     queryEditor.setValue(query);
+}
+
+function generateDocumentQuery() {
+    //Generate the query
+    let variables = " ?lettre", body = "", optionalBody = "";
+
+    //Always include the label
+    variables += " ?titre";
+    optionalBody += "\tOPTIONAL { ?lettre rdfs:label ?titre } .\n";
+
+    //At least one constraint --> The document is an letter 
+
+    body += "\t?lettre a ahpo:Letter . \n";
+
+    //Construct the full SPARQL query
+    let query = prefixHeader + "\n" +
+        "SELECT DISTINCT" + variables + " WHERE {\n" +
+        body +
+        optionalBody +
+        "\n}\n" +
+        "ORDER BY ?publicationDate";
+
+    return query;
+
 }
 
 function generateArticleQuery() {
@@ -134,13 +206,24 @@ function generateArticleQuery() {
     /* This value is an IRI, based on the label selected by the user in the input,
        see queriesManager.js getPersonsLabels() function for details */
     if (articleAuthor) {
-        body += "\t?article ahpo:authoredBy <" + articleAuthor.value + "> .\n";
+        body += "\t?article ahpo:authoredBy <" + articleAuthor.value + "> .\n" +
+            "\t<" + articleAuthor.value + "> dcterms:title ?auteur .\n";
     } else {
-        variables += " ?auteur";
         optionalBody += "\tOPTIONAL { ?article ahpo:authoredBy [dcterms:title ?auteur] } .\n";
     }
 
-    console.log($("#publicationDateSelect").val());
+    if (selectedTopic) {
+        body += "\t?article dcterms:subject \"" + selectedTopic + "\" .\n";
+    }
+
+    /* This value is an IRI, based on the label selected by the user in the input,
+       see queriesManager.js getJournalsLabel() function for details */
+    if (selectedJournal) {
+        body += "\t?article ahpo:publishedIn <" + selectedJournal.value + "> .\n" +
+            "\t<" + selectedJournal.value + "> dcterms:title ?journal .\n";
+    } else {
+        optionalBody += "\tOPTIONAL { ?article ahpo:publishedIn [dcterms:title ?journal] } .\n";
+    }
 
     switch ($("#publicationDateSelect").val()) {
         case 'between': {
@@ -152,7 +235,7 @@ function generateArticleQuery() {
                     "\t\t && xsd:integer(SUBSTR(?dateDePublication, 0, 5)) <= " +
                     + $("#maxPublicationYearInput").val() + ")\n";
             } else {
-                variables += " ?dateDePublication";
+
                 optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
             }
             break;
@@ -197,17 +280,20 @@ function generateArticleQuery() {
                 optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
             }
             break;
-
         }
     }
+
+    variables += " ?auteur";
+    variables += " ?journal";
+    variables += " ?dateDePublication";
 
 
     //Construct the full SPARQL query
     let query = prefixHeader + "\n" +
-        "SELECT" + variables + " WHERE {\n" +
+        "SELECT DISTINCT" + variables + " WHERE {\n" +
         body +
         optionalBody +
-        "\n}\n" + 
+        "\n}\n" +
         "ORDER BY ?publicationDate";
 
     return query;
@@ -233,9 +319,8 @@ function updateResultsTableContent(type, results) {
                 }
             });
 
-            tableContent.push(headerRow);
+            //tableContent.push(headerRow);
         }
-
 
         //Creating data row
         let row = [];
@@ -251,7 +336,8 @@ function updateResultsTableContent(type, results) {
         tableContent.push(row);
     });
 
-    $("#resultsTable > thead").empty();
+
+    //$("#resultsTable > thead").empty();
     $("#resultsTable").dataTable().fnClearTable();
 
     if (tableContent.length != 0) {

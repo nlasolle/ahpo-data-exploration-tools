@@ -1,8 +1,6 @@
 const SPARQL_ENDPOINT = "http://localhost:3030/hp_corpus/";
 
 var persons = [], topics = [];
-var personAutocomplete, topicAutocomplete, mapPersonAutocomplete;
-var selectedPerson, selectedTopic;
 
 /**
  * Launch a SPARQL query to retrieve all individuals from Henri Poincaré corpus graph.
@@ -24,7 +22,7 @@ function getPersonsLabels() {
 
     request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
     request.setRequestHeader("Content-type", "application/sparql-query");
-
+    
     request.onload = function () {
         if (request.status == 200) {
             let response = JSON.parse(this.response);
@@ -40,35 +38,50 @@ function getPersonsLabels() {
             }
             console.log(persons);
 
-            personAutocomplete = new Autocomplete(document.getElementById('personAutocompleteInput'), {
-                data: persons,
-                threshold: 1,
-                maximumItems: 6,
-                onSelectItem: ({ label, value }) => {
-                    selectedPerson = { label, value };
-                    $('#generatePersonDistribution').prop('disabled', false);
-                }
-            });
+            initPersonInputData(persons);
 
-            mapPersonAutocomplete = new Autocomplete(document.getElementById('mapPersonAutocompleteInput'), {
-                data: persons,
-                threshold: 1,
-                maximumItems: 6,
-                onSelectItem: ({ label, value }) => {
-                    selectedPerson = { label, value };
-                    $('#generatePersonMarkers').prop('disabled', false);
-                }
-            });
+        } else {
+            console.log('An error occured when retrieving persons from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
+        }
+    };
 
-            articlePersonAutocomplete = new Autocomplete(document.getElementById('articlePersonAutocompleteInput'), {
-                data: persons,
-                threshold: 1,
-                maximumItems: 6,
-                onSelectItem: ({ label, value }) => {
-                    articleAuthor = { label, value };
-                    refreshSPARQLQuery();
-                }
-            });
+    request.send();
+}
+
+/**
+ * Launch a SPARQL query to retrieve all journals (scientifics journals) from Henri Poincaré corpus graph.
+ * For each journal, the IRI and the label (using dcterms:title) are retrieved
+ */
+ function getJournalsLabels() {
+    "use strict";
+    const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+        "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
+        "PREFIX ahpot: <http://henripoincare.fr/ahpot#>\n" +
+        "SELECT ?iri ?label WHERE {\n " +
+        "   ?iri a ahpo:Journal . \n" +
+        "   ?iri dcterms:title ?label \n" +
+        "}";
+
+    var request = new XMLHttpRequest();
+
+    request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
+    request.setRequestHeader("Content-type", "application/sparql-query");
+    
+    request.onload = function () {
+        if (request.status == 200) {
+            let response = JSON.parse(this.response);
+            let bindings = response.results.bindings;
+            let journals = [];
+
+            for (let i in bindings) {
+                let journal = {
+                    label: bindings[i].label.value,
+                    value: bindings[i].iri.value
+                };
+                journals.push(journal);
+            }
+
+            initJournalInputData(journals);
 
         } else {
             console.log('An error occured when retrieving persons from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
@@ -102,19 +115,11 @@ function getTopicsLabels() {
                 };
                 topics.push(topic);
             }
-            console.log(persons);
 
-            topicAutocomplete = new Autocomplete(document.getElementById('topicAutocompleteInput'), {
-                data: topics,
-                threshold: 1,
-                maximumItems: 6,
-                onSelectItem: ({ value }) => {
-                    selectedTopic = value;
-                    $('#generateTopicDistribution').prop('disabled', false);
-                }
-            });
+           //initTopicInputData(topics);
+           initTagsInput("articleTopicAutocompleteInput", "Rechercher un thème" , topics)
         } else {
-            console.log('An error occured when retrieving persons from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
+            console.log('An error occured when retrieving topics from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
         }
     };
 

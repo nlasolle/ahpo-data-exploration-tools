@@ -4,7 +4,7 @@ var tableContent, tableCount, map;
 $(document).ready(function () {
 
   $('#correspondentTable').DataTable({
-    autoWidth: true,
+    autoWidth: false,
     bFilter: true
   });
 
@@ -20,6 +20,7 @@ $(document).ready(function () {
   $('#generatePersonMarkers').prop('disabled', true);
 
   getPersonsLabels();
+  getJournalsLabels();
   getTopicsLabels();
 
   //Statistics about correspondent are saved to nav local storage
@@ -151,6 +152,7 @@ function updateCorrespondentsTable(results) {
 
   if (tableContent.length != 0) {
     $("#correspondentsTable").dataTable().fnAddData(tableContent);
+    $("#correspondentsTable").columns.adjust().draw();
     $("#correspondentsTable tr").css("cursor", "pointer");
   }
   getCorrespondentsCitations("ahpo:citeName");
