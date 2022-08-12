@@ -63,7 +63,7 @@
 
         <div class="tab-content" style="padding-top: 1em;">
             <div id="tab1" class="tab-pane fade show active">
-                <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                <div class="container-fluid" style="padding-top: 10px; padding-left:2%; padding-right:2%">
                     <div class="row">
                         <h3>Veuillez sélectionner le type de ressource</h3>
                         <div class="form-group" style="padding:1%;">
@@ -111,20 +111,21 @@
                                                 </div>
 
                                                 <div class="form-group col-md-6">
+                                                    <label for="articleJournalAutocompleteInput">Publié dans</label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Rechercher un journal ou un ouvrage"
+                                                        id="articleJournalAutocompleteInput" />
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-9">
                                                     <label for="articleTopicAutocompleteInput">Thème</label>
                                                     <input type="text" class="form-control"
                                                         id="articleTopicAutocompleteInput" />
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="articleJournalAutocompleteInput">Journal</label>
-                                                    <input type="text" class="form-control"
-                                                        placeholder="Rechercher un journal"
-                                                        id="articleJournalAutocompleteInput" />
-                                                </div>
 
-                                                <div class="form-group col-md-6">
+                                                <div class="form-group col-md-3">
                                                     <label for="placeInput">Langue</label>
                                                     <select class="form-select" id="languageDateSelect">
                                                         <option value="fr">fr</option>
@@ -172,31 +173,43 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="form-group col-md-4">
-                                                    <label class="align-middle" for="articleTitleInput">Le titre contient (bleu) ou non
-                                                        (rouge)</label>
-                                                </div>
-                                                <div class="form-group col-md-7">
+                                                <div class="form-group col-md-8">
+                                                    <label class="align-middle" for="articleTitleInput">Le titre
+                                                        contient</label>
+
+                                                    <span class="fa fa-info-circle align-middle"
+                                                        template='<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+                                                        data-bs-html="true" placement="top" data-bs-toggle="tooltip"
+                                                        title="
+                                                        Un mécanisme d'autocomplétion 
+                                                        permet de retrouver des éléments en commençant à saisir un texte dans
+                                                        le champ. Une fois un élément sélectionné, celui-ci sera alors
+                                                        coloré en bleu.
+                                                        <br><br>
+                                                        Si vous cliquez sur l'un des éléments présents
+                                                        dans le champ, il deviendra coloré en rouge, 
+                                                        ce qui signifie que la recherche s'intéresse aux éléments
+                                                        ne correspondant pas au critère.
+                                                    "></span>
+
                                                     <input id='articleTitleInput'>
                                                 </div>
 
-                                                <div class="form-group col-md-1">
-                                                    <div class="form-group">
-                                                        <!--<h2>Select the type of the targeted resource and fill in the form inputs</h2>-->
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="articleTitleOptions" id="andArticleTitleCheckbox"
-                                                                value="and">
-                                                            <label class="form-check-label"
-                                                                for="andArticleTitleCheckbox">Et</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="articleTitleOptions" id="orArticleTitleCheckbox"
-                                                                value="or">
-                                                            <label class="form-check-label"
-                                                                for="orArticleTitleCheckbox">Ou</label>
-                                                        </div>
+                                                <div class="form-group col-md-4 flex-group">
+                                                    <!--<h2>Select the type of the targeted resource and fill in the form inputs</h2>-->
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="articleTitleOptions" checked id="andArticleTitleCheckbox"
+                                                            value="and">
+                                                        <label class="form-check-label"
+                                                            for="andArticleTitleCheckbox">Et</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="articleTitleOptions" id="orArticleTitleCheckbox"
+                                                            value="or">
+                                                        <label class="form-check-label"
+                                                            for="orArticleTitleCheckbox">Ou</label>
                                                     </div>
                                                 </div>
 
@@ -374,7 +387,7 @@
 
                             <div class="card-body">
                                 <div class="container-fluid"
-                                    style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                                    style="padding-top: 10px; padding-left:2%; padding-right:2%">
                                     <table class="table table-hover display" id="resultsTable">
                                         <thead>
                                             <tr id="resultsTableHeader">
@@ -395,7 +408,7 @@
             </div>
 
             <div id="tab2" class="tab-pane fade">
-                <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                <div class="container-fluid" style="padding-top: 10px; padding-left:2%; padding-right:2%">
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label for="placeInput">Correspondant</label>
@@ -437,7 +450,7 @@
             </div>
 
             <div id="tab3" class="tab-pane fade">
-                <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                <div class="container-fluid" style="padding-top: 10px; padding-left:2%; padding-right:2%">
                     <div style="margin-top:2%; margin-bottom:2%; padding-left:11%; padding-right:11%">
                         <canvas id="articlesChart"></canvas>
                     </div>
@@ -455,7 +468,7 @@
             </div>
 
             <div id="tab4" class="tab-pane fade">
-                <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                <div class="container-fluid" style="padding-top: 10px; padding-left:2%; padding-right:2%">
                     <table class="table table-hover display" id="correspondentsTable">
                         <thead>
                             <tr>
@@ -473,7 +486,7 @@
                 </div>
             </div>
             <div id="tab5" class="tab-pane fade">
-                <div class="container-fluid" style="padding-top: 10px; padding-left:4%; padding-right:4%">
+                <div class="container-fluid" style="padding-top: 10px; padding-left:2%; padding-right:2%">
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label for="placeInput">Correspondant</label>

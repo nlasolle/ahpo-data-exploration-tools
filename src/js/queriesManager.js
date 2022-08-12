@@ -49,7 +49,7 @@ function getPersonsLabels() {
 }
 
 /**
- * Launch a SPARQL query to retrieve all journals (scientifics journals) from Henri Poincaré corpus graph.
+ * Launch a SPARQL query to retrieve all journals (scientifics journals) and books from Henri Poincaré corpus graph.
  * For each journal, the IRI and the label (using dcterms:title) are retrieved
  */
  function getJournalsLabels() {
@@ -57,8 +57,9 @@ function getPersonsLabels() {
     const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
         "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
         "PREFIX ahpot: <http://henripoincare.fr/ahpot#>\n" +
-        "SELECT ?iri ?label WHERE {\n " +
-        "   ?iri a ahpo:Journal . \n" +
+        "SELECT DISTINCT ?iri ?label WHERE {\n " +
+        "   ?a a ahpo:Article ." +
+        "   ?a ahpo:publishedIn ?iri ." +
         "   ?iri dcterms:title ?label \n" +
         "}";
 

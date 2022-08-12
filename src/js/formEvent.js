@@ -10,6 +10,8 @@ var query;
 
 $(document).ready(function () {
 
+    initTooltips();
+
     refreshSPARQLQuery();
 
     /*Management of form blocks, which are hidden/shown depending on the selected type
@@ -135,6 +137,15 @@ function refreshSPARQLQuery() {
     if (query) {
         updateQueryInput(query);
     }
+
+    $(".tagify__tag").unbind('hover');
+}
+
+function initTooltips() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
 }
 
 function checkEmptyInputs(documentType) {
@@ -152,6 +163,7 @@ function checkEmptyInputs(documentType) {
             if ($("#articleJournalAutocompleteInput").val() == "") {
                 selectedJournal = null;
             }
+
             break;
         }
 
@@ -235,7 +247,6 @@ function generateArticleQuery() {
                     "\t\t && xsd:integer(SUBSTR(?dateDePublication, 0, 5)) <= " +
                     + $("#maxPublicationYearInput").val() + ")\n";
             } else {
-
                 optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
             }
             break;
@@ -248,7 +259,6 @@ function generateArticleQuery() {
                     + $("#pivotPublicationYearInput").val() + " ) \n";
             }
             else {
-                variables += " ?dateDePublication";
                 optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
             }
             break;
@@ -262,7 +272,6 @@ function generateArticleQuery() {
                     + $("#pivotPublicationYearInput").val() + " ) \n";
             }
             else {
-                variables += " ?dateDePublication";
                 optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
             }
             break;
@@ -276,7 +285,6 @@ function generateArticleQuery() {
                     + $("#pivotPublicationYearInput").val() + " ) \n";
             }
             else {
-                variables += " ?dateDePublication";
                 optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
             }
             break;

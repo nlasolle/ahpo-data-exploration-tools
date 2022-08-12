@@ -16,6 +16,7 @@ function initTagsInput(inputId, placeholderText, data) {
         });
     }
 
+    
     tagify.on('click', onTagClick);
 }
 

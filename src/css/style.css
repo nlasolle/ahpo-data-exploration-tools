@@ -1,10 +1,29 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
+@media (min-width: 768px) {
+    .flex-group {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: flex-end;
+              align-items: flex-end;
+    }
+    .form-horizontal .flex-group .control-label {
+      padding-top: 0;
+    }
+  }
+
+  
 body {
     font-family: ''Poppins', sans-serif';
     background: #fafafa;
     overflow-y: hidden;
     overflow-x: hidden;
+}
+
+.tooltip-inner {
+    text-align: justify;
+    text-justify: inter-word;
+    max-width: 350px;
 }
 
 td:hover {
@@ -82,18 +101,17 @@ td {
 }
 
 
-.tagify{
+.tagify {
     --tag-bg: #3e7ad5;
     --tag-hover: rgba(91, 146, 228, 0.56);
     --tag-text-color: white;
     --tag-text-color--edit: white;
     border-radius: 1%;
-    width : 100%;
+    width: 100%;
 }
 
 .tagify__tag:hover {
     cursor: pointer;
-    overflow: hidden;
 }
 
 
