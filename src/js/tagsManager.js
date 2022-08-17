@@ -15,13 +15,17 @@ function initTagsInput(inputId, placeholderText, data) {
             whitelist: data
         });
     }
-
     
-    tagify.on('click', onTagClick);
+    tagify.on('click', onTagClick)
+        .on('remove', onRemoveTag);
 }
 
 // invalid tag added callback
 function onTagClick(e) {
     let tag = e.detail.tag;
     tag.classList.toggle("unwanted-item");
+}
+
+function onRemoveTag(){
+    refreshSPARQLQuery();
 }

@@ -1,4 +1,4 @@
-const SPARQL_ENDPOINT = "http://localhost:3030/hp_corpus/";
+const SPARQL_ENDPOINT = "http://localhost:3030/full_ahp_corpus/";
 
 var persons = [], topics = [];
 
@@ -114,7 +114,11 @@ function getTopicsLabels() {
                     label: bindings[i].topic.value,
                     value: bindings[i].topic.value
                 };
-                topics.push(topic);
+
+                if(!topic.label.startsWith("http")){
+                    topics.push(topic);
+                }
+               
             }
 
            //initTopicInputData(topics);
@@ -418,7 +422,6 @@ function getCorrespondentsCitations(property) {
 function getQueryResults(type, query) {
     "use strict";;
     var request = new XMLHttpRequest();
-    console.log("FINAL QUERY " + query);
     request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
     request.setRequestHeader("Content-type", "application/sparql-query");
 

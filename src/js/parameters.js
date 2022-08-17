@@ -1,5 +1,5 @@
 var resultsTableColumns = {
-    "article": ["rdfs:label", "ahpo:authoredBy", "ahpo:publishedIn", "ahpo:publicationDate"],
+    "article": ["rdfs:label", "ahpo:authoredBy", "ahpo:publicationDate", "ahpo:publishedIn"],
     "document": ["rdfs:label", "ahpo:authoredBy", "dcterms:date"],
     "letter": ["rdfs:label", "ahpo:writingDate", "ahpo:incipit"],
     "person": ["rdfs:label", "bio:birth", "bio:death", "dcterms:description"]

@@ -5,7 +5,7 @@ const ARTICLE_FORM = 1,
     PERSON_FORM = 5;
 
 var articlePersonAutocomplete;
-var articleAuthor, selectedTopic, selectedJournal;
+var articleAuthor, selectedTopic, selectedJournal, selectedOperator;
 var query;
 
 $(document).ready(function () {
@@ -33,6 +33,11 @@ $(document).ready(function () {
     articleAuthor = null;
     selectedTopic = null;
     selectedJournal = null;
+
+    $('input[type=radio][name=articleTitleOptions]').change(function () {
+        refreshSPARQLQuery();
+        selectedOperator = this.value;
+    });
 
     $('input[type=radio][name=typeRadioOptions]').change(function () {
         if (this.value == 'Article') {
@@ -112,7 +117,6 @@ $(document).ready(function () {
 function refreshSPARQLQuery() {
     query = "";
     checkEmptyInputs(ARTICLE_FORM);
-    console.log($("#typeRadioOptions").val());
 
     //Generates the new SPARQL query
     switch ($("input[type=radio][name=typeRadioOptions]").val()) {
@@ -224,8 +228,43 @@ function generateArticleQuery() {
         optionalBody += "\tOPTIONAL { ?article ahpo:authoredBy [dcterms:title ?auteur] } .\n";
     }
 
-    if (selectedTopic) {
-        body += "\t?article dcterms:subject \"" + selectedTopic + "\" .\n";
+    $('.tagify__tag').each(function () {
+        
+        if ($(this).parent().siblings("#articleTopicAutocompleteInput").get(0)) {
+            let constraint = "\t?article dcterms:subject \"" + $(this).get(0).title + "\" .\n";
+
+            if ($(this).hasClass("unwanted-item")) {
+                body += "\tFILTER NOT EXISTS {" + constraint + "} .\n";
+            } else {
+                body += constraint;
+            }
+        }
+    });
+
+    let titleConstraint = "";
+    let first = true;
+    let operator = "";
+    $('.tagify__tag').each(function () {
+        
+        if(!first && !operator){
+            operator = selectedOperator;
+        }
+
+        if ($(this).parent().siblings("#articleTitleInput").get(0)) {
+            
+            let constraint = "CONTAINS(?titre, \""+ $(this).get(0).title + "\")";
+            if ($(this).hasClass("unwanted-item")) {
+                titleConstraint += " " + operator + " !" + constraint;
+            } else {
+                titleConstraint += " " + operator + " " +constraint;
+            }
+        }
+
+        first = false;
+    });
+
+    if (titleConstraint != "")  {
+        body += "\tFILTER (" + titleConstraint + " ) . \n";
     }
 
     /* This value is an IRI, based on the label selected by the user in the input,
@@ -334,10 +373,31 @@ function updateResultsTableContent(type, results) {
         let row = [];
         row.push(tableCount);
 
+        console.log("OBJ");
+        console.dir(obj);
+
+        var i = 1;
+
         Object.keys(obj).forEach(key => {
+            console.log("KEY " + key)
             if (key != type) {
-                row.push(obj[key].value);
+                //console.log(obj[key]);
+                if (obj[key] && obj[key].value)
+                    row[i] = obj[key].value;
+                else
+                    row.push("");
+
+                i++;
             }
+            //console.dir(row);
+            console.log("HEAD");
+            console.dir(headerRow);
+            for (let k = i; k < headerRow.length; k++) {
+                row.push("");
+                console.dir("OHOH");
+            }
+
+            console.dir(row);
         });
 
         tableCount++;
