@@ -127,10 +127,10 @@
 
                                                 <div class="form-group col-md-3">
                                                     <label for="placeInput">Langue</label>
-                                                    <select class="form-select" id="languageDateSelect">
-                                                        <option value="fr">fr</option>
-                                                        <option value="en">en</option>
+                                                    <select class="form-select" id="articleLanguageSelect">
                                                         <option value="de">de</option>
+                                                        <option value="en">ge</option>
+                                                        <option selected value="fr">fr</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -198,7 +198,7 @@
                                                 <div class="form-group col-md-4 flex-group">
                                                     <!--<h2>Select the type of the targeted resource and fill in the form inputs</h2>-->
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio"
+                                                        <input class="form-check-input" checked type="radio"
                                                             name="articleTitleOptions" id="andArticleTitleCheckbox"
                                                             value="&&">
                                                         <label class="form-check-label"
@@ -275,11 +275,24 @@
                                                         id="correspondentAutocompleteInput" />
                                                 </div>
                                                 <div class="row">
-                                                    <div class="form-group col-md-4">
+                                                    <div class="form-group col-md-9">
                                                         <label for="placeInput">Thème</label>
                                                         <input type="text" class="form-control"
                                                             placeholder="Rechercher un thème"
                                                             id="letterTopicAutocompleteInput" />
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="placeInput">Langue</label>
+                                                        <select class="form-select" id="letterLanguageSelect">
+                                                            <option value="de">de</option>
+                                                            <option value="de">el</option>
+                                                            <option value="en">en</option>
+                                                            <option value="de">f</option>
+                                                            <option value="fr">fr</option>
+                                                            <option value="de">it</option>
+                                                            <option value="de">se</option>
+                                                            <option value="de">sv</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -534,6 +547,7 @@
     <script type="text/javascript" src="js/autocomplete.js"></script>
     <script type="text/javascript" src="js/fileManager.js"></script>
     <script type="text/javascript" src="js/tagsManager.js"></script>
+    <script type="text/javascript" src="js/queryGenerator.js"></script>
     <script src="codemirror/codemirror-5.58.2/lib/codemirror.js"></script>
     <script src="codemirror/codemirror-5.58.2/addon/edit/matchbrackets.js"></script>
 

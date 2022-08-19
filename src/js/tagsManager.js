@@ -24,6 +24,7 @@ function initTagsInput(inputId, placeholderText, data) {
 function onTagClick(e) {
     let tag = e.detail.tag;
     tag.classList.toggle("unwanted-item");
+    refreshSPARQLQuery();
 }
 
 function onRemoveTag(){

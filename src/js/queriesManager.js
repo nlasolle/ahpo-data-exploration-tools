@@ -1,6 +1,6 @@
 const SPARQL_ENDPOINT = "http://localhost:3030/full_ahp_corpus/";
 
-var persons = [], topics = [];
+var persons = [], articleTopics = [], letterTopics = [];
 
 /**
  * Launch a SPARQL query to retrieve all individuals from Henri Poincaré corpus graph.
@@ -22,7 +22,7 @@ function getPersonsLabels() {
 
     request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
     request.setRequestHeader("Content-type", "application/sparql-query");
-    
+
     request.onload = function () {
         if (request.status == 200) {
             let response = JSON.parse(this.response);
@@ -52,7 +52,7 @@ function getPersonsLabels() {
  * Launch a SPARQL query to retrieve all journals (scientifics journals) and books from Henri Poincaré corpus graph.
  * For each journal, the IRI and the label (using dcterms:title) are retrieved
  */
- function getJournalsLabels() {
+function getJournalsLabels() {
     "use strict";
     const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
         "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
@@ -67,7 +67,7 @@ function getPersonsLabels() {
 
     request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
     request.setRequestHeader("Content-type", "application/sparql-query");
-    
+
     request.onload = function () {
         if (request.status == 200) {
             let response = JSON.parse(this.response);
@@ -96,9 +96,15 @@ function getPersonsLabels() {
  * Launch a SPARQL query to retrieve all topics associated with documents
  *  from Henri Poincaré corpus graph.
  */
-function getTopicsLabels() {
+function getTopicsLabels(type) {
+    let topics = [];
     "use strict";
-    const query = "PREFIX dcterms: <http://purl.org/dc/terms/> SELECT DISTINCT ?topic WHERE {?s dcterms:subject ?topic}";
+    const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n " +
+        "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
+        "SELECT DISTINCT ?topic WHERE {\n" +
+        "\t?s a " + type + " . \n" +
+        "\t?s dcterms:subject ?topic" +
+        "}";
     var request = new XMLHttpRequest();
 
     request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
@@ -115,17 +121,19 @@ function getTopicsLabels() {
                     value: bindings[i].topic.value
                 };
 
-                if(!topic.label.startsWith("http")){
+                if (!topic.label.startsWith("http")) {
                     topics.push(topic);
                 }
-               
+
             }
 
-           //initTopicInputData(topics);
-           initTagsInput("articleTopicAutocompleteInput", "Rechercher un thème" , topics)
+            //initTopicInputData(topics);
+            initTagsInput("articleTopicAutocompleteInput", "Rechercher un thème", topics)
         } else {
             console.log('An error occured when retrieving topics from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
         }
+
+        return topics;
     };
 
     request.send();

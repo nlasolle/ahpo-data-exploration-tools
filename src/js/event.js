@@ -21,7 +21,9 @@ $(document).ready(function () {
 
   getPersonsLabels();
   getJournalsLabels();
-  getTopicsLabels();
+  
+  articleTopics = getTopicsLabels("ahpo:Article");
+  letterTopics = getTopicsLabels("ahpo:Letter");
 
   //Statistics about correspondent are saved to nav local storage
   tableContent = JSON.parse(localStorage.getItem('correspondentStorage'));

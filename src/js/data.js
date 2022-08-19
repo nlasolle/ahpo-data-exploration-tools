@@ -81,7 +81,7 @@ function initPersonInputData(persons) {
 
 function initTopicInputData(topics) {
     topicAutocomplete = new Autocomplete(document.getElementById('topicAutocompleteInput'), {
-        data: topics,
+        data: letterTopics,
         threshold: THRESHOLD,
         maximumItems: MAX_ITEMS,
         onSelectItem: ({ value }) => {
@@ -91,7 +91,7 @@ function initTopicInputData(topics) {
     });
 
     articleTopicAutocomplete = new Autocomplete(document.getElementById('articleTopicAutocompleteInput'), {
-        data: topics,
+        data: articleTopics,
         threshold: THRESHOLD,
         maximumItems: MAX_ITEMS,
         onSelectItem: ({ value }) => {
@@ -101,7 +101,7 @@ function initTopicInputData(topics) {
     });
 
     letterTopicAutocomplete = new Autocomplete(document.getElementById('letterTopicAutocompleteInput'), {
-        data: topics,
+        data: letterTopics,
         threshold: THRESHOLD,
         maximumItems: MAX_ITEMS,
         onSelectItem: ({ value }) => {
