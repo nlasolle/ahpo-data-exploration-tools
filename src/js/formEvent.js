@@ -39,6 +39,11 @@ $(document).ready(function () {
         selectedOperator = this.value;
     });
 
+    $('input[type=radio][name=letterTranscriptionOptions]').change(function () {
+        refreshSPARQLQuery();
+        selectedOperator = this.value;
+    });
+
     $('select').change(function () {
         refreshSPARQLQuery();
     });
@@ -70,19 +75,34 @@ $(document).ready(function () {
             $("#personBlock").show();
         }
 
+        console.log("refreshing SPARQL query");
         refreshSPARQLQuery();
     });
 
     //Article form management
-    $("#pivotPublicationDateForm").hide();
+    getArticleAuthorsLabels();
+    $("#pivotArticleDateForm").hide();
 
-    $('#publicationDateSelect').on('change', function () {
+    $('#articleDateSelect').on('change', function () {
         if (this.value == "between") {
-            $("#pivotPublicationDateForm").hide();
-            $("#betweenPublicationDateForm").show();
+            $("#pivotArticleDateForm").hide();
+            $("#betweenArticleDateForm").show();
         } else if (this.value == "before" || this.value == "after") {
-            $("#pivotPublicationDateForm").show();
-            $("#betweenPublicationDateForm").hide();
+            $("#pivotArticleDateForm").show();
+            $("#betweenArticleDateForm").hide();
+        }
+
+        refreshSPARQLQuery();
+    });
+
+    $("#pivotLetterDateForm").hide();
+    $('#letterDateSelect').on('change', function () {
+        if (this.value == "between") {
+            $("#pivotLetterDateForm").hide();
+            $("#betweenLetterDateForm").show();
+        } else if (this.value == "before" || this.value == "after") {
+            $("#pivotLetterDateForm").show();
+            $("#betweenLetterDateForm").hide();
         }
 
         refreshSPARQLQuery();
@@ -93,7 +113,6 @@ $(document).ready(function () {
     });
 
     $("input").bind('blur', function () {
-        console.log("BLURAAA");
         refreshSPARQLQuery();
     });
 
@@ -105,16 +124,19 @@ $(document).ready(function () {
     });
 
     $('#articleSearchButton').on('click', function () {
-
         //Send the query to the SPARQL endpoint and update results Table
         getQueryResults("article", query);
-
-        //Prepare distribution
-        console.log(query);
     });
+
+    getJournalsLabels();
+    articleTopics = getTopicsLabels("ahpo:Article");
+    letterTopics = getTopicsLabels("ahpo:Letter");
 
     //Tags manager for input
     initTagsInput("articleTitleInput", "Saisir un terme");
+
+    //Tags manager for input
+    initTagsInput("letterTitleInput", "Saisir un terme");
 });
 
 
@@ -141,10 +163,8 @@ function checkEmptyInputs(documentType) {
             if ($("#articleJournalAutocompleteInput").val() == "") {
                 selectedJournal = null;
             }
-
             break;
         }
-
         default: break;
     }
 

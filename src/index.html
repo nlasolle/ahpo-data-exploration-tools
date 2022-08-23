@@ -106,7 +106,6 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="articlePersonAutocompleteInput">Auteur</label>
                                                     <input type="text" class="form-control"
-                                                        placeholder="Rechercher une personne"
                                                         id="articlePersonAutocompleteInput" />
                                                 </div>
 
@@ -135,9 +134,9 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <label for="publicationDate">Date de publication</label>
-                                                <div id="publicationDate" class="form-group col-md-3">
-                                                    <select class="form-select" id="publicationDateSelect">
+                                                <label for="articleDate">Date de publication</label>
+                                                <div id="articleDate" class="form-group col-md-3">
+                                                    <select class="form-select" id="articleDateSelect">
                                                         <option value="between">Entre</option>
                                                         <option value="before">Avant</option>
                                                         <option value="after">Après</option>
@@ -146,28 +145,23 @@
                                                 </div>
 
 
-                                                <div id="pivotPublicationDateForm" class="form-group col-md-4">
+                                                <div id="pivotArticleDateForm" class="form-group col-md-4">
                                                     <input type="number" class="form-control"
-                                                        id="pivotPublicationYearInput" min="1800" max="1950" />
-                                                    <!--<input type="date" class="form-control" id="pivotPublicationDateInput" />-->
+                                                        id="pivotArticleYearInput" min="1800" max="1950" />
                                                 </div>
 
-                                                <div id="betweenPublicationDateForm" class="form-group col-md-6">
+                                                <div id="betweenArticleDateForm" class="form-group col-md-6">
                                                     <div class="row" style="padding:0%">
                                                         <div class="form-group col-md-5">
                                                             <input type="number" class="form-control"
-                                                                id="minPublicationYearInput" min="1800" max="1950" />
-                                                            <!--<input type="date" class="form-control"
-                                                        id="minPublicationDateInput" />-->
+                                                                id="minArticleYearInput" min="1800" max="1950" />
                                                         </div>
                                                         <div class="form-group col-md-2" style="text-align:center">
                                                             <h4>et</h4>
                                                         </div>
                                                         <div class="form-group col-md-5">
                                                             <input type="number" class="form-control"
-                                                                id="maxPublicationYearInput" min="1800" max="1950" />
-                                                            <!--<input type="date" class="form-control"
-                                                        id="maxPublicationDateInput" />-->
+                                                                id="maxArticleYearInput" min="1800" max="1950" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -196,7 +190,6 @@
                                                 </div>
 
                                                 <div class="form-group col-md-4 flex-group">
-                                                    <!--<h2>Select the type of the targeted resource and fill in the form inputs</h2>-->
                                                     <div class="form-check form-check-inline">
                                                         <input class="form-check-input" checked type="radio"
                                                             name="articleTitleOptions" id="andArticleTitleCheckbox"
@@ -247,7 +240,7 @@
                                             <div style="padding:1%;">
                                                 <button id="documentSearchButton" type="button"
                                                     class="btn btn-outline-primary">
-                                                    Générer et exécuter requête
+                                                    Exécuter requête
                                                 </button>
                                             </div>
                                         </div>
@@ -267,35 +260,111 @@
                                                         placeholder="Rechercher une personne"
                                                         id="recipientAutocompleteInput" />
                                                 </div>
-
+                                                <!--
                                                 <div class="form-group col-md-4">
                                                     <label for="placeInput">Correspondant</label>
                                                     <input type="text" class="form-control"
                                                         placeholder="Rechercher une personne"
                                                         id="correspondentAutocompleteInput" />
-                                                </div>
+                                                </div>-->
                                                 <div class="row">
                                                     <div class="form-group col-md-9">
-                                                        <label for="placeInput">Thème</label>
+                                                        <label for="letterTopicAutocompleteInput">Thème</label>
                                                         <input type="text" class="form-control"
                                                             placeholder="Rechercher un thème"
                                                             id="letterTopicAutocompleteInput" />
                                                     </div>
                                                     <div class="form-group col-md-3">
-                                                        <label for="placeInput">Langue</label>
+                                                        <label for="letterLanguageSelect">Langue</label>
                                                         <select class="form-select" id="letterLanguageSelect">
                                                             <option value="de">de</option>
-                                                            <option value="de">el</option>
+                                                            <option value="el">el</option>
                                                             <option value="en">en</option>
-                                                            <option value="de">f</option>
-                                                            <option value="fr">fr</option>
-                                                            <option value="de">it</option>
-                                                            <option value="de">se</option>
-                                                            <option value="de">sv</option>
+                                                            <option value="f">f</option>
+                                                            <option selected value="fr">fr</option>
+                                                            <option value="it">it</option>
+                                                            <option value="se">se</option>
+                                                            <option value="sv">sv</option>
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                                <div class="row">
+                                                    <label for="letterDate">Date de rédaction</label>
+                                                    <div id="letterDate" class="form-group col-md-3">
+                                                        <select class="form-select" id="letterDateSelect">
+                                                            <option value="between">Entre</option>
+                                                            <option value="before">Avant</option>
+                                                            <option value="after">Après</option>
+                                                            <option value="equalsTo">Égale à</option>
+                                                        </select>
+                                                    </div>
+    
+    
+                                                    <div id="pivotLetterDateForm" class="form-group col-md-4">
+                                                        <input type="number" class="form-control"
+                                                            id="pivotLetterYearInput" min="1800" max="1950" />
+                                                    </div>
+    
+                                                    <div id="betweenLetterDateForm" class="form-group col-md-6">
+                                                        <div class="row" style="padding:0%">
+                                                            <div class="form-group col-md-5">
+                                                                <input type="number" class="form-control"
+                                                                    id="minLetterYearInput" min="1800" max="1950" />
+                                                            </div>
+                                                            <div class="form-group col-md-2" style="text-align:center">
+                                                                <h4>et</h4>
+                                                            </div>
+                                                            <div class="form-group col-md-5">
+                                                                <input type="number" class="form-control"
+                                                                    id="maxLetterYearInput" min="1800" max="1950" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
+
+                                            <div class="row">
+                                                <div class="form-group col-md-8">
+                                                    <label class="align-middle" for="letterTranscriptionInput">Terme contenu dans la transcription</label>
+
+                                                    <span class="fa fa-info-circle align-middle"
+                                                        template='<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+                                                        data-bs-html="true" placement="top" data-bs-toggle="tooltip"
+                                                        title="
+                                                        Un mécanisme d'autocomplétion 
+                                                        permet de retrouver des éléments en commençant à saisir un texte dans
+                                                        le champ. Une fois un élément sélectionné, celui-ci sera alors
+                                                        coloré en bleu.
+                                                        <br><br>
+                                                        Si vous cliquez sur l'un des éléments présents
+                                                        dans le champ, il deviendra coloré en rouge, 
+                                                        ce qui signifie que la recherche s'intéresse aux éléments
+                                                        ne correspondant pas au critère.
+                                                    "></span>
+
+                                                    <input id='letterTranscriptionInput'>
+                                                </div>
+
+                                                <div class="form-group col-md-4 flex-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" checked type="radio"
+                                                            name="letterTranscriptionOptions" id="andLetterTranscriptionCheckbox"
+                                                            value="&&">
+                                                        <label class="form-check-label"
+                                                            for="andLetterTranscriptionCheckbox">Et</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="letterTranscriptionOptions" id="orLetterTranscriptionCheckbox"
+                                                            value="||">
+                                                        <label class="form-check-label"
+                                                            for="orletterTranscriptionCheckbox">Ou</label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
                                             <div style="padding:1%;">
                                                 <button id="letterSearchButton" type="button"
                                                     class="btn btn-outline-primary">

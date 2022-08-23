@@ -38,7 +38,7 @@ function initPersonInputData(persons) {
         }
     });
 
-    articlePersonAutocomplete = new Autocomplete(document.getElementById('articlePersonAutocompleteInput'), {
+    /*articlePersonAutocomplete = new Autocomplete(document.getElementById('articlePersonAutocompleteInput'), {
         data: persons,
         threshold: THRESHOLD,
         maximumItems: MAX_ITEMS,
@@ -46,17 +46,7 @@ function initPersonInputData(persons) {
             articleAuthor = { label, value };
             refreshSPARQLQuery();
         }
-    });
-
-    correspondentAutocomplete = new Autocomplete(document.getElementById('correspondentAutocompleteInput'), {
-        data: persons,
-        threshold: THRESHOLD,
-        maximumItems: MAX_ITEMS,
-        onSelectItem: ({ label, value }) => {
-            articleAuthor = { label, value };
-            refreshSPARQLQuery();
-        }
-    });
+    });*/
 
     senderAutocomplete = new Autocomplete(document.getElementById('senderAutocompleteInput'), {
         data: persons,
@@ -90,7 +80,7 @@ function initTopicInputData(topics) {
         }
     });
 
-    articleTopicAutocomplete = new Autocomplete(document.getElementById('articleTopicAutocompleteInput'), {
+    /*articleTopicAutocomplete = new Autocomplete(document.getElementById('articleTopicAutocompleteInput'), {
         data: articleTopics,
         threshold: THRESHOLD,
         maximumItems: MAX_ITEMS,
@@ -98,7 +88,7 @@ function initTopicInputData(topics) {
             selectedTopic = value;
             refreshSPARQLQuery();
         }
-    });
+    });*/
 
     letterTopicAutocomplete = new Autocomplete(document.getElementById('letterTopicAutocompleteInput'), {
         data: letterTopics,

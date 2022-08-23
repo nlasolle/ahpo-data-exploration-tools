@@ -20,10 +20,6 @@ $(document).ready(function () {
   $('#generatePersonMarkers').prop('disabled', true);
 
   getPersonsLabels();
-  getJournalsLabels();
-  
-  articleTopics = getTopicsLabels("ahpo:Article");
-  letterTopics = getTopicsLabels("ahpo:Letter");
 
   //Statistics about correspondent are saved to nav local storage
   tableContent = JSON.parse(localStorage.getItem('correspondentStorage'));
@@ -43,6 +39,7 @@ $(document).ready(function () {
   prepareModalChart(1872, 1912);
   getLettersData();
   getArticlesData();
+
   $('#personAutocompleteInput').val("");
   $('#mapPersonAutocompleteInput').val("");
   $('#topicAutocompleteInput').val("");
@@ -54,7 +51,6 @@ $(document).ready(function () {
 
   //Get an image of the chart
   $('#exportPNG').click(function (e) {
-
     var a = document.createElement('a');
     a.href = lettersChart.toBase64Image();
     a.download = "chart_distribution_" + getFormattedDate() + ".png";
@@ -68,7 +64,6 @@ $(document).ready(function () {
 
   //Get an image of the articles chart
   $('#exportArticlesPNG').click(function (e) {
-
     var a = document.createElement('a');
     a.href = articlesChart.toBase64Image();
     a.download = "articles_chart_distribution_" + getFormattedDate() + ".png";
@@ -77,9 +72,7 @@ $(document).ready(function () {
 
   //Remove dataset, only keep the first distribution, corresponding to the whole correspondence
   $('#reinitChart').click(function (e) {
-    console.log(lettersChart.data.datasets);
     lettersChart.data.datasets.splice(1);
-    console.log(lettersChart.data.datasets);
     lettersChart.update();
   });
 
