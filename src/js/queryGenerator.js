@@ -72,10 +72,10 @@ function generateArticleQuery() {
 
     if (authorsConstraint) {
         body += authorsConstraint;
-    } else {
-        variables += " ?auteur";
-        optionalBody += "\tOPTIONAL { ?article ahpo:authoredBy [rdfs:label ?auteur] } .\n";
-    }
+    } 
+
+    variables += " ?auteur";
+    optionalBody += "\tOPTIONAL { ?article ahpo:authoredBy [rdfs:label ?auteur] } .\n";
 
     body += addStringPropertyConstraint("articleTopicAutocompleteInput",
         "dcterms:subject");
@@ -294,7 +294,7 @@ function addStringPropertyContainsConstraint(inputId, variableName, operator) {
                 first = false;
             }
 
-            let constraint = "CONTAINS(?" + variableName + ", \"" + $(this).get(0).title + "\")";
+            let constraint = "CONTAINS(lcase(?" + variableName + "), \"" + $(this).get(0).title.toLowerCase() + "\")";
 
             if ($(this).hasClass("unwanted-item")) {
                 constraintList += " !" + constraint;
