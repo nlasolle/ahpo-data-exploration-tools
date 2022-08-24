@@ -474,6 +474,7 @@ function getCorrespondentsCitations(property) {
  * Launch a SPARQL query and put the content in a DataTable
  */
 function getQueryResults(type, query) {
+    console.log(query);
     "use strict";;
     var request = new XMLHttpRequest();
     request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);

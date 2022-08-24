@@ -48,7 +48,7 @@ function generateDocumentQuery() {
         body +
         optionalBody +
         "\n}\n" +
-        "ORDER BY ?publicationDate";
+        "ORDER BY ?lang ?publicationDate";
 
     return query;
 
@@ -80,7 +80,6 @@ function generateArticleQuery() {
     body += addStringPropertyConstraint("articleTopicAutocompleteInput",
         "dcterms:subject");
 
-    body += "\t?article ahpo:language \"" + $("#articleLanguageSelect option:selected").text() + "\" .\n";
 
     let titleConstraint = addStringPropertyContainsConstraint("articleTitleInput", "titre", selectedOperator);
 
@@ -108,6 +107,8 @@ function generateArticleQuery() {
     } else {
         optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
     }
+
+    body += "\t?article ahpo:language \"" + $("#articleLanguageSelect option:selected").text() + "\"\n";
 
     //Construct the full SPARQL query
     let query = prefixHeader + "\n" +
@@ -174,7 +175,7 @@ function generateLetterQuery() {
     if (dateBody) {
         body += dateBody;
     } else {
-        optionalBody += "\tOPTIONAL { ?letter " + property + " ?" + varName + " } .";
+        optionalBody += "\tOPTIONAL { ?letter ahpo:writingDate ?dateDeRedaction } .";
     }
 
     //Construct the full SPARQL query

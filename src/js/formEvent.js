@@ -7,6 +7,7 @@ const ARTICLE_FORM = 1,
 var articlePersonAutocomplete;
 var articleAuthor, selectedTopic, selectedJournal, selectedOperator = "&&";
 var query;
+var resultsTable;
 
 $(document).ready(function () {
 
@@ -75,7 +76,7 @@ $(document).ready(function () {
             $("#personBlock").show();
         }
 
-        console.log("refreshing SPARQL query");
+        updateResultsTable([], this.value);
         refreshSPARQLQuery();
     });
 
@@ -116,12 +117,7 @@ $(document).ready(function () {
         refreshSPARQLQuery();
     });
 
-    //Results table initialization
-    $('#resultsTable').DataTable({
-        autoWidth: true,
-        bFilter: true,
-        fixedColumns: false
-    });
+
 
     $('#articleSearchButton').on('click', function () {
         //Send the query to the SPARQL endpoint and update results Table
@@ -137,6 +133,7 @@ $(document).ready(function () {
 
     //Tags manager for input
     initTagsInput("letterTitleInput", "Saisir un terme");
+
 });
 
 
@@ -201,12 +198,12 @@ function updateResultsTableContent(type, results) {
         let row = [];
         row.push(tableCount);
 
-        console.dir(obj);
+        //console.dir(obj);
 
         var i = 1;
 
         Object.keys(obj).forEach(key => {
-            console.log("KEY " + key)
+            //console.log("KEY " + key)
             if (key != type) {
                 //console.log(obj[key]);
                 if (obj[key] && obj[key].value)
@@ -217,14 +214,12 @@ function updateResultsTableContent(type, results) {
                 i++;
             }
             //console.dir(row);
-            console.log("HEAD");
-            console.dir(headerRow);
+            //console.dir(headerRow);
             for (let k = i; k < headerRow.length; k++) {
                 row.push("");
-                console.dir("OHOH");
             }
 
-            console.dir(row);
+            //console.dir(row);
         });
 
         tableCount++;
@@ -239,4 +234,38 @@ function updateResultsTableContent(type, results) {
         $("#resultsTable").dataTable().fnAddData(tableContent);
         $("#resultsTable tr").css("cursor", "pointer");
     }
+}
+
+function updateResultsTable(data, type) {
+    let columns = [];
+
+    if (type == "Article") {
+        columns = [
+            { title: '#' },
+            { title: 'Titre' },
+            { title: 'Auteur' },
+            { title: 'Journal' },
+            { title: 'Date de publication' },
+        ]
+    } else if (type == "Letter") {
+        columns = [
+            { title: '#' },
+            { title: 'Titre' },
+            { title: 'Date de rédaction' },
+            { title: 'Incipit' }
+        ]
+    }
+
+    if (resultsTable) {
+        resultsTable.destroy();       
+        $("#resultsTable").empty();
+    }
+
+
+    //Results table initialization
+    resultsTable = $('#resultsTable').DataTable({
+        bFilter: true,
+        data: data,
+        columns: columns
+    });
 }
