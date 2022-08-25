@@ -43,7 +43,7 @@ function generateDocumentQuery() {
     body += "\t?lettre a ahpo:Letter . \n";
 
     //Construct the full SPARQL query
-    let query = prefixHeader + "\n" +
+    let query = PREFIX_HEADER + "\n" +
         "SELECT DISTINCT" + variables + " WHERE {\n" +
         body +
         optionalBody +
@@ -111,7 +111,7 @@ function generateArticleQuery() {
     body += "\t?article ahpo:language \"" + $("#articleLanguageSelect option:selected").text() + "\"\n";
 
     //Construct the full SPARQL query
-    let query = prefixHeader + "\n" +
+    let query = PREFIX_HEADER + "\n" +
         "SELECT DISTINCT" + variables + " WHERE {\n" +
         body +
         optionalBody +
@@ -179,7 +179,7 @@ function generateLetterQuery() {
     }
 
     //Construct the full SPARQL query
-    let query = prefixHeader + "\n" +
+    let query = PREFIX_HEADER + "\n" +
         "SELECT DISTINCT" + variables + " WHERE {\n" +
         body +
         optionalBody +

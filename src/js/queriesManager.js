@@ -1,4 +1,3 @@
-const SPARQL_ENDPOINT = "http://localhost:3030/full_ahp_corpus/";
 
 var persons = [], articleTopics = [], letterTopics = [];
 
@@ -475,7 +474,7 @@ function getCorrespondentsCitations(property) {
  */
 function getQueryResults(type, query) {
     console.log(query);
-    "use strict";;
+    "use strict";
     var request = new XMLHttpRequest();
     request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
     request.setRequestHeader("Content-type", "application/sparql-query");

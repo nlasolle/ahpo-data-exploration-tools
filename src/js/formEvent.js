@@ -134,6 +134,7 @@ $(document).ready(function () {
     //Tags manager for input
     initTagsInput("letterTitleInput", "Saisir un terme");
 
+    updateResultsTable([], "article");
 });
 
 
@@ -175,24 +176,8 @@ function updateResultsTableContent(type, results) {
     let tableCount = 1;
     let tableContent = [];
     let first = true;
-    let headerRow;
 
     results.forEach(obj => {
-
-        //First line? Then we create the header
-        if (first) {
-            first = false;
-            Object.keys(obj).forEach(key => {
-                headerRow = [];
-                if (key != type) {
-                    let column = {}
-                    column.title = key;
-                    headerRow.push(column);
-                }
-            });
-
-            //tableContent.push(headerRow);
-        }
 
         //Creating data row
         let row = [];
@@ -213,33 +198,20 @@ function updateResultsTableContent(type, results) {
 
                 i++;
             }
-            //console.dir(row);
-            //console.dir(headerRow);
-            for (let k = i; k < headerRow.length; k++) {
-                row.push("");
-            }
-
-            //console.dir(row);
         });
 
         tableCount++;
         tableContent.push(row);
     });
+    
+    updateResultsTable(tableContent, type);
 
-
-    //$("#resultsTable > thead").empty();
-    $("#resultsTable").dataTable().fnClearTable();
-
-    if (tableContent.length != 0) {
-        $("#resultsTable").dataTable().fnAddData(tableContent);
-        $("#resultsTable tr").css("cursor", "pointer");
-    }
 }
 
 function updateResultsTable(data, type) {
     let columns = [];
 
-    if (type == "Article") {
+    if (type.toLowerCase() == "article") {
         columns = [
             { title: '#' },
             { title: 'Titre' },
@@ -247,7 +219,7 @@ function updateResultsTable(data, type) {
             { title: 'Journal' },
             { title: 'Date de publication' },
         ]
-    } else if (type == "Letter") {
+    } else if (type.toLowerCase() == "letter") {
         columns = [
             { title: '#' },
             { title: 'Titre' },
@@ -257,7 +229,7 @@ function updateResultsTable(data, type) {
     }
 
     if (resultsTable) {
-        resultsTable.destroy();       
+        resultsTable.destroy();
         $("#resultsTable").empty();
     }
 
@@ -265,7 +237,18 @@ function updateResultsTable(data, type) {
     //Results table initialization
     resultsTable = $('#resultsTable').DataTable({
         bFilter: true,
+        autowidth: true,
         data: data,
         columns: columns
+    });
+
+    $("#resultsTable tr").css("cursor", "pointer");
+
+    $('#resultsTable tr').on('click', () => {
+
+        window.open(
+            "http://cosmocracyinc.org",
+            '_blank' // <- This is what makes it open in a new window.
+        );
     });
 }
