@@ -32,15 +32,15 @@ function refreshSPARQLQuery() {
 
 function generateDocumentQuery() {
     //Generate the query
-    let variables = " ?lettre", body = "", optionalBody = "";
+    let variables = " ?document", body = "", optionalBody = "";
 
     //Always include the label
     variables += " ?titre";
-    optionalBody += "\tOPTIONAL { ?lettre rdfs:label ?titre } .\n";
+    optionalBody += "\tOPTIONAL { ?document rdfs:label ?titre } .\n";
 
     //At least one constraint --> The document is an letter 
 
-    body += "\t?lettre a ahpo:Letter . \n";
+    body += "\t?document a ahpo:Document . \n";
 
     //Construct the full SPARQL query
     let query = PREFIX_HEADER + "\n" +
@@ -130,6 +130,7 @@ function generateLetterQuery() {
     //Always include the label
     variables += " ?titre";
     optionalBody += "\tOPTIONAL { ?letter rdfs:label ?titre } .\n";
+    optionalBody += "\tOPTIONAL { ?letter ahpo:incipit ?incipit } .\n";
 
     //At least one constraint --> The document is an letter
     body += "\t?letter a ahpo:Letter . \n";
@@ -140,9 +141,6 @@ function generateLetterQuery() {
 
     if (senderConstraint) {
         body += senderConstraint;
-    } else {
-        variables += " ?expediteur";
-        optionalBody += "\tOPTIONAL { ?letter ahpo:sentBy [rdfs:label ?exp] } .\n";
     }
 
     //Then adding the constraint based on users input
@@ -151,9 +149,6 @@ function generateLetterQuery() {
 
     if (recipientConstraint) {
         body += recipientConstraint;
-    } else {
-        variables += " ?destinataire";
-        optionalBody += "\tOPTIONAL { ?letter ahpo:sentTo [rdfs:label ?destinataire] } .\n";
     }
 
     body += addStringPropertyConstraint("letterTopicAutocompleteInput",
@@ -164,18 +159,19 @@ function generateLetterQuery() {
     let transcriptionConstraint = addStringPropertyContainsConstraint("letterTranscriptionInput", "transcription", selectedOperator);
 
     if (transcriptionConstraint != "") {
-        body += "\tFILTER (" + titleConstraint + " ) . \n";
+        body += "\t?letter o:media [o-cnt:chars ?transcription] .\n";
+        body += "\tFILTER (" + transcriptionConstraint + " ) . \n";
     }
 
-    variables += " ?dateDeRedaction";
+    variables += " ?incipit";
+
+
 
     let dateBody = addDateConstraint("Letter",
         "ahpo:writingDate", "dateDeRedaction")
 
     if (dateBody) {
         body += dateBody;
-    } else {
-        optionalBody += "\tOPTIONAL { ?letter ahpo:writingDate ?dateDeRedaction } .";
     }
 
     //Construct the full SPARQL query
@@ -183,7 +179,7 @@ function generateLetterQuery() {
         "SELECT DISTINCT" + variables + " WHERE {\n" +
         body +
         optionalBody +
-        "\n}\n" +
+        "}\n" +
         "ORDER BY ?dateDeRedaction";
 
     return query;
@@ -253,7 +249,6 @@ function addDateConstraint(typeName, property, varName) {
         }
     }
 
-    console.log("date body " + dateBody);
     return dateBody;
 
 }

@@ -6,13 +6,15 @@ const SITE_URL = "http://henripoincare.fr/s/correspondance/item/";
 const resultsTableColumns = {
     "article": ["rdfs:label", "ahpo:authoredBy", "ahpo:publicationDate", "ahpo:publishedIn"],
     "document": ["rdfs:label", "ahpo:authoredBy", "dcterms:date"],
-    "letter": ["rdfs:label", "ahpo:writingDate", "ahpo:incipit"],
+    "letter": ["rdfs:label", "ahpo:incipit"],
     "person": ["rdfs:label", "bio:birth", "bio:death", "dcterms:description"]
 }
 
 
-const PREFIX_HEADER = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+const PREFIX_HEADER = "PREFIX o:     <http://omeka.org/s/vocabs/o#>\n" +
+    "PREFIX o-cnt: <http://www.w3.org/2011/content#>\n" +
+    "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
     "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
     "PREFIX ahpot: <http://henripoincare.fr/ahpot#>\n" +
-    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
+    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
     "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n";

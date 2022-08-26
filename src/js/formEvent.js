@@ -114,10 +114,12 @@ $(document).ready(function () {
     });
 
 
-
     $('#articleSearchButton').on('click', function () {
-        //Send the query to the SPARQL endpoint and update results Table
         getQueryResults("article", query);
+    });
+
+    $('#letterSearchButton').on('click', function () {
+        getQueryResults("letter", query);
     });
 
 
@@ -140,7 +142,7 @@ $(document).ready(function () {
     initTagsInput("articleTitleInput", "Saisir un terme");
 
     //Tags manager for input
-    initTagsInput("letterTitleInput", "Saisir un terme");
+    initTagsInput("letterTranscriptionInput", "Saisir un terme");
 
     updateResultsTable([], "article");
 });
@@ -202,7 +204,6 @@ function updateResultsTableContent(type, results) {
 
                 i++;
             } else {
-                console.log("obj[key].value" + obj[key].value);
                idsMatch[tableCount] = obj[key].value.substring(
                 obj[key].value.lastIndexOf("/") + 1
                );
@@ -232,7 +233,6 @@ function updateResultsTable(data, type) {
         columns = [
             { title: '#' },
             { title: 'Titre' },
-            { title: 'Date de rédaction' },
             { title: 'Incipit' }
         ]
     }
