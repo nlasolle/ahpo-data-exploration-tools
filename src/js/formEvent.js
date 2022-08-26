@@ -8,6 +8,7 @@ var articlePersonAutocomplete;
 var articleAuthor, selectedTopic, selectedJournal, selectedOperator = "&&";
 var query;
 var resultsTable;
+var idsMatch;
 
 $(document).ready(function () {
 
@@ -119,17 +120,17 @@ $(document).ready(function () {
         getQueryResults("article", query);
     });
 
-    
+
     $('#exportQueryButton').on('click', function () {
         downloadSPARQLInputContent(queryEditor);
     });
-    
+
 
     $('#editQueryButton').on('click', function () {
         queryEditor.setOption("readOnly", false);
     });
 
-    
+
 
     getJournalsLabels();
     articleTopics = getTopicsLabels("ahpo:Article");
@@ -148,7 +149,7 @@ $(document).ready(function () {
 
 function initTooltips() {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 }
@@ -182,7 +183,7 @@ function updateQueryInput(query) {
 function updateResultsTableContent(type, results) {
     let tableCount = 1;
     let tableContent = [];
-    let first = true;
+    idsMatch = [];
 
     results.forEach(obj => {
 
@@ -190,20 +191,21 @@ function updateResultsTableContent(type, results) {
         let row = [];
         row.push(tableCount);
 
-        //console.dir(obj);
-
         var i = 1;
 
         Object.keys(obj).forEach(key => {
-            //console.log("KEY " + key)
             if (key != type) {
-                //console.log(obj[key]);
                 if (obj[key] && obj[key].value)
                     row[i] = obj[key].value;
                 else
                     row.push("");
 
                 i++;
+            } else {
+                console.log("obj[key].value" + obj[key].value);
+               idsMatch[tableCount] = obj[key].value.substring(
+                obj[key].value.lastIndexOf("/") + 1
+               );
             }
         });
 
@@ -251,13 +253,21 @@ function updateResultsTable(data, type) {
 
     $("#resultsTable tr").css("cursor", "pointer");
 
-    $('#resultsTable tr').on('click', () => {
+    $('#resultsTable').on('click', 'tbody tr', function () {
+        console.dir(idsMatch);
+        //Content of the first cell, giving the id in the table
+        let tableId = resultsTable.row($(this)).data()[0];
 
+        //Use this retrieved id to find the Omeka S website id 
+        let omekaId = idsMatch[tableId];
+        //Open link in new tab
         window.open(
-            "http://cosmocracyinc.org",
-            '_blank' // <- This is what makes it open in a new window.
+            "http://henripoincare.fr/s/correspondance/item/" + omekaId,
+            "HP website"
         );
     });
+
+
 }
 
 /**
