@@ -105,6 +105,9 @@ $(document).ready(function () {
         refreshSPARQLQuery();
     });
 
+    $("#articleDateSelect").val("between");
+    $("#letterDateSelect").val("between");
+
     $("input").bind('change input', function () {
         refreshSPARQLQuery();
     });
@@ -189,7 +192,7 @@ function updateResultsTableContent(type, results) {
 
         var i = 1;
 
-        Object.keys(obj).forEach(key => {
+        resultsTableColumns[type].forEach(key => {
             if (key != type) {
                 if (obj[key] && obj[key].value)
                     row[i] = obj[key].value;
@@ -203,6 +206,21 @@ function updateResultsTableContent(type, results) {
                );
             }
         });
+
+        /*Object.keys(obj).forEach(key => {
+            if (key != type) {
+                if (obj[key] && obj[key].value)
+                    row[i] = obj[key].value;
+                else
+                    row.push("");
+
+                i++;
+            } else {
+               idsMatch[tableCount] = obj[key].value.substring(
+                obj[key].value.lastIndexOf("/") + 1
+               );
+            }
+        });*/
 
         tableCount++;
         tableContent.push(row);
@@ -229,6 +247,11 @@ function updateResultsTable(data, type) {
             { title: 'Titre' },
             { title: 'Incipit' }
         ]
+    } else {
+        columns = [
+            { title: '#' },
+            { title: 'Titre' }
+        ];
     }
 
     if (resultsTable) {
