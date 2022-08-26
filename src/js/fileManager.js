@@ -1,5 +1,5 @@
 
-function convertJSONArrayToCSV(args) {  
+function convertJSONArrayToCSV(args) {
     var result, ctr, keys, propertiesKeys, columnDelimiter, lineDelimiter, data;
 
     data = args.data || null;
@@ -19,23 +19,23 @@ function convertJSONArrayToCSV(args) {
     result += columnDelimiter + propertiesKeys.join(columnDelimiter);
     result += lineDelimiter;
 
-    data.forEach(function(item) {
+    data.forEach(function (item) {
         ctr = 0;
-        keys.forEach(function(key) {
+        keys.forEach(function (key) {
             if (ctr > 0) result += columnDelimiter;
-            
+
             result += item[key].replaceAll('\n', '');
             ctr++;
         });
 
         var propertiesValues = item.properties;
-        propertiesKeys.forEach(function(propertyKey){
+        propertiesKeys.forEach(function (propertyKey) {
             result += columnDelimiter;
-            if(propertiesValues[propertyKey]){
+            if (propertiesValues[propertyKey]) {
                 result += '"' + propertiesValues[propertyKey].replaceAll(',', ';').replaceAll('\n', '') + '"';
             }
 
-        });  
+        });
         console.log(result);
         result += lineDelimiter;
     });
@@ -43,14 +43,14 @@ function convertJSONArrayToCSV(args) {
     return result;
 }
 
-function downloadChartCSV(years, counts) {  
-    var data ="",
+function downloadChartCSV(years, counts) {
+    var data = "",
         link,
         columnSeparator = ','
-        lineDelimiter = '\n';
+    lineDelimiter = '\n';
 
 
-    for(i in years){
+    for (i in years) {
         data += years[i] + columnSeparator + counts[i] + lineDelimiter;
     }
 
@@ -68,9 +68,9 @@ function downloadChartCSV(years, counts) {
     link.click();
 }
 
-function getFormattedDate(){
+function getFormattedDate() {
     const now = new Date(Date.now());
-    
+
     var month = now.getMonth().toString();
     if (month.length == 1) {
         month = "0" + month;
@@ -92,5 +92,19 @@ function getFormattedDate(){
         minutes = "0" + minutes;
     }
 
-    return  now.getFullYear() + month  + day + "_" + hours + minutes;
+    return now.getFullYear() + month + day + "_" + hours + minutes;
+}
+
+/**
+ * Save the content of the generated SPARQL query to a text file
+ */
+function downloadSPARQLInputContent(element) {
+
+    var content = element.getValue();
+    var link = document.createElement('a');
+    mimeType = 'text/plain';
+
+    link.setAttribute('download', "sparql_query_" + getFormattedDate() + ".txt");
+    link.setAttribute('href', 'data:' + mimeType + ';charset=utf-8,' + encodeURIComponent(content));
+    link.click();
 }

@@ -13,6 +13,12 @@
   }
 
   
+  
+.readOnly {
+    background-color: #d5523e;
+    background: green;
+}
+    
 body {
     font-family: ''Poppins', sans-serif';
     background: #fafafa;

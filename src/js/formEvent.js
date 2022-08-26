@@ -24,12 +24,7 @@ $(document).ready(function () {
     $("#personBlock").hide();
 
 
-    //Remove previous input values when reloading page, but keep them when changing radio button values for ressource type
-    $('#articlePersonAutocompleteInput').val("");
-    $('#documentPersonAutocompleteInput').val("");
-    $('#senderAutocompleteInput').val("");
-    $('#recipientAutocompleteInput').val("");
-    $('#correspondentAutocompleteInput').val("");
+    clearInputValues();
 
     articleAuthor = null;
     selectedTopic = null;
@@ -124,6 +119,18 @@ $(document).ready(function () {
         getQueryResults("article", query);
     });
 
+    
+    $('#exportQueryButton').on('click', function () {
+        downloadSPARQLInputContent(queryEditor);
+    });
+    
+
+    $('#editQueryButton').on('click', function () {
+        queryEditor.setOption("readOnly", false);
+    });
+
+    
+
     getJournalsLabels();
     articleTopics = getTopicsLabels("ahpo:Article");
     letterTopics = getTopicsLabels("ahpo:Letter");
@@ -203,7 +210,7 @@ function updateResultsTableContent(type, results) {
         tableCount++;
         tableContent.push(row);
     });
-    
+
     updateResultsTable(tableContent, type);
 
 }
@@ -251,4 +258,13 @@ function updateResultsTable(data, type) {
             '_blank' // <- This is what makes it open in a new window.
         );
     });
+}
+
+/**
+ * Remove previous input values
+ * Used when relodading the DOM
+ */
+function clearInputValues() {
+    $('input[type=text]').val("");
+    $('input[type=number]').val("");
 }
