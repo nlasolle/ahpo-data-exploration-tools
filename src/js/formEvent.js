@@ -128,12 +128,6 @@ $(document).ready(function () {
     });
 
 
-    $('#editQueryButton').on('click', function () {
-        queryEditor.setOption("readOnly", false);
-    });
-
-
-
     getJournalsLabels();
     articleTopics = getTopicsLabels("ahpo:Article");
     letterTopics = getTopicsLabels("ahpo:Letter");

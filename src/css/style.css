@@ -11,13 +11,6 @@
       padding-top: 0;
     }
   }
-
-  
-  
-.readOnly {
-    background-color: #d5523e;
-    background: green;
-}
     
 body {
     font-family: ''Poppins', sans-serif';
@@ -90,7 +83,7 @@ td {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     height: 50px;
-    background-color: #ccccccc9;
+    background-color: #fbf7f7c9 !important;
 }
 
 .card {
