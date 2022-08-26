@@ -173,7 +173,13 @@ function getTopicsLabels(type) {
             }
 
             //initTopicInputData(topics);
-            initTagsInput("articleTopicAutocompleteInput", "Rechercher un thème", topics)
+            if (type == "ahpo:Article") {
+                initTagsInput("articleTopicAutocompleteInput", "Rechercher un thème", topics);
+            } else {
+                initTagsInput("letterTopicAutocompleteInput", "Rechercher un thème", topics);
+            }
+
+
         } else {
             console.log('An error occured when retrieving topics from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
         }

@@ -19,6 +19,10 @@ function refreshSPARQLQuery() {
         }
         case 'Person': {
             query = generatePersonQuery();
+            break;
+        }
+        default: {
+            query = generateArticleQuery();
         }
     }
 
@@ -72,13 +76,13 @@ function generateArticleQuery() {
 
     if (authorsConstraint) {
         body += authorsConstraint;
-    } 
+    }
 
     variables += " ?auteur";
     optionalBody += "\tOPTIONAL { ?article ahpo:authoredBy [rdfs:label ?auteur] } .\n";
 
     body += addStringPropertyConstraint("articleTopicAutocompleteInput",
-        "dcterms:subject");
+        "dcterms:subject", "article");
 
 
     let titleConstraint = addStringPropertyContainsConstraint("articleTitleInput", "titre", selectedOperator);
@@ -152,7 +156,7 @@ function generateLetterQuery() {
     }
 
     body += addStringPropertyConstraint("letterTopicAutocompleteInput",
-        "dcterms:subject");
+        "dcterms:subject", "letter");
 
     body += "\t?letter ahpo:language \"" + $("#letterLanguageSelect option:selected").text() + "\" .\n";
 
@@ -186,13 +190,13 @@ function generateLetterQuery() {
 }
 
 
-function addStringPropertyConstraint(inputId, property) {
+function addStringPropertyConstraint(inputId, property, typeName) {
     let constraintList = "";
 
     $('.tagify__tag').each(function () {
 
         if ($(this).parent().siblings("#" + inputId).get(0)) {
-            let constraint = "\t?article " + property + " \"" + $(this).get(0).title + "\" .\n";
+            let constraint = "\t?" + typeName + " " + property + " \"" + $(this).get(0).title + "\" .\n";
 
             if ($(this).hasClass("unwanted-item")) {
                 constraintList += "\tFILTER NOT EXISTS {" + constraint + "} .\n";
