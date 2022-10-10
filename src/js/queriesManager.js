@@ -142,7 +142,7 @@ function getJournalsLabels() {
  *  from Henri Poincaré corpus graph.
  */
 function getTopicsLabels(type) {
-    let topics = [];
+    let topicsLabels = [];
     "use strict";
     const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n " +
         "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
@@ -167,16 +167,16 @@ function getTopicsLabels(type) {
                 };
 
                 if (!topic.label.startsWith("http")) {
-                    topics.push(topic);
+                    topicsLabels.push(topic);
                 }
 
             }
 
             //initTopicInputData(topics);
             if (type == "ahpo:Article") {
-                initTagsInput("articleTopicAutocompleteInput", "Rechercher un thème", topics);
+                initTagsInput("articleTopicAutocompleteInput", "Rechercher un thème", topicsLabels);
             } else {
-                initTagsInput("letterTopicAutocompleteInput", "Rechercher un thème", topics);
+                initTagsInput("letterTopicAutocompleteInput", "Rechercher un thème", topicsLabels);
             }
 
 
@@ -184,7 +184,7 @@ function getTopicsLabels(type) {
             console.log('An error occured when retrieving topics from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
         }
 
-        return topics;
+        return topicsLabels;
     };
 
     request.send();
