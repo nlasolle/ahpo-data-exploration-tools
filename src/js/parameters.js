@@ -4,10 +4,10 @@ const SPARQL_ENDPOINT = "http://tomcat.henripoincare.fr/fuseki/hp_corpus/";
 const SITE_URL = "http://henripoincare.fr/s/correspondance/item/";
 
 const resultsTableColumns = {
-    "article": ["titre", "auteur", "journal", "dateDePublication"],
-    "document": ["rdfs:label", "ahpo:authoredBy", "dcterms:date"],
-    "letter": ["titre", "incipit"],
-    "person": ["rdfs:label", "bio:birth", "bio:death", "dcterms:description"]
+    "article": ["article", "titre", "auteur", "journal", "dateDePublication"],
+    "document": ["document", "rdfs:label", "ahpo:authoredBy", "dcterms:date"],
+    "letter": ["letter", "titre", "incipit"],
+    "person": ["person", "rdfs:label", "bio:birth", "bio:death", "dcterms:description"]
 }
 
 

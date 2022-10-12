@@ -201,9 +201,10 @@ function updateResultsTableContent(type, results) {
 
                 i++;
             } else {
-               idsMatch[tableCount] = obj[key].value.substring(
+               let tableId = obj[key].value.substring(
                 obj[key].value.lastIndexOf("/") + 1
                );
+               idsMatch[tableCount] = tableId;
             }
         });
 
@@ -271,16 +272,15 @@ function updateResultsTable(data, type) {
     $("#resultsTable tr").css("cursor", "pointer");
 
     $('#resultsTable').on('click', 'tbody tr', function () {
-        console.dir(idsMatch);
         //Content of the first cell, giving the id in the table
         let tableId = resultsTable.row($(this)).data()[0];
 
         //Use this retrieved id to find the Omeka S website id 
         let omekaId = idsMatch[tableId];
+
         //Open link in new tab
         window.open(
-            "http://henripoincare.fr/s/correspondance/item/" + omekaId,
-            "HP website"
+            "http://henripoincare.fr/s/correspondance/item/" + omekaId
         );
     });
 
