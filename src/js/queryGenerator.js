@@ -1,3 +1,5 @@
+const ALL = "Tout";
+
 function refreshSPARQLQuery() {
     query = "";
     checkEmptyInputs(ARTICLE_FORM);
@@ -112,7 +114,10 @@ function generateArticleQuery() {
         optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
     }
 
-    body += "\t?article ahpo:language \"" + $("#articleLanguageSelect option:selected").text() + "\"\n";
+    if($("#articleLanguageSelect option:selected").text() != ALL) {
+        body += "\t?article ahpo:language \"" + $("#articleLanguageSelect option:selected").text() + "\"\n";
+    }
+
 
     //Construct the full SPARQL query
     let query = PREFIX_HEADER + "\n" +
