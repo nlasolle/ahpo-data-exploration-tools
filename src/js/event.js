@@ -95,7 +95,10 @@ $(document).ready(function () {
     let person = persons.find(p => {
       return p.label == personLabel;
     });
-
+     console.log("PERSON LABEL " + personLabel);
+     console.dir(persons);
+ console.log("PERSON");
+     console.dir(person);
     if (person != '' && person.birthPlace) {
       let id = person.birthPlace.substring(person.birthPlace.lastIndexOf("/") + 1);
       getGeonamesData(person, id);

@@ -55,7 +55,7 @@ function getPersonsLabels() {
     "use strict";
     const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
         "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
-        "PREFIX ahpot: <http://henripoincare.fr/ahpot#>\n" +
+        "PREFIX ahpot: <http://henripoincare.fr/ahpot>\n" +
         "SELECT ?person ?title ?birthPlace ?deathPlace WHERE {\n " +
         "   ?person a ahpo:Person . \n" +
         "   ?person dcterms:title ?title .\n" +
@@ -101,7 +101,7 @@ function getJournalsLabels() {
     "use strict";
     const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
         "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
-        "PREFIX ahpot: <http://henripoincare.fr/ahpot#>\n" +
+        "PREFIX ahpot: <http://henripoincare.fr/ahpot>\n" +
         "SELECT DISTINCT ?iri ?label WHERE {\n " +
         "   ?a a ahpo:Article ." +
         "   ?a ahpo:publishedIn ?iri ." +
