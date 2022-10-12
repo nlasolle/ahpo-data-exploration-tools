@@ -39,7 +39,7 @@ function initMap() {
         maxZoom: 11,
         minZoom: 2,
         zoomControl: false,
-        id: 'mapbox/streets-v11',
+        id: 'mapbox/satellite-v9',
         tileSize: 512,
         zoomOffset: -1,
         zoomSnap: 0.25,
