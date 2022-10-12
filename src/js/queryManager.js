@@ -1,5 +1,5 @@
 
-var persons = [], articleTopics = [], letterTopics = [];
+var articlePersons = [], persons = [], articleTopics = [], letterTopics = [];
 
 /**
  * Launch a SPARQL query to retrieve all individuals from Henri Poincaré corpus graph.
@@ -33,7 +33,7 @@ function getArticleAuthorsLabels() {
                     label: bindings[i].title.value,
                     value: bindings[i].person.value
                 };
-                persons.push(person);
+                articlePersons.push(person);
                 authorsLabels.push(person.label);
             }
 
@@ -56,7 +56,7 @@ function getPersonsLabels() {
     const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
         "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
         "PREFIX ahpot: <http://henripoincare.fr/ahpot>\n" +
-        "SELECT ?person ?title ?birthPlace ?deathPlace WHERE {\n " +
+        "SELECT DISTINCT ?person ?title ?birthPlace WHERE {\n " +
         "   ?person a ahpo:Person . \n" +
         "   ?person dcterms:title ?title .\n" +
         "   OPTIONAL{?person ahpot:birthPlace ?birthPlace}\n" +

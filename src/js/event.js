@@ -150,7 +150,7 @@ function updateCorrespondentsTable(results) {
 
   if (tableContent.length != 0) {
     $("#correspondentsTable").dataTable().fnAddData(tableContent);
-    $("#correspondentsTable").columns.adjust().draw();
+    //$("#correspondentsTable").columns.adjust().draw();
     $("#correspondentsTable tr").css("cursor", "pointer");
   }
   getCorrespondentsCitations("ahpo:citeName");
