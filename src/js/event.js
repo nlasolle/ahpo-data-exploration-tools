@@ -110,7 +110,7 @@ $(document).ready(function () {
      Because we don't want to use the value 
      which is stored in selectedPerson var or selectedTopic var
      if the corresponding input field is empty */
-    let topic = $('#personAutocompleteInput').val();
+    let topic = $('#distribTopicAutocompleteInput').val();
 
     if (topic != '') {
       updateTopicChart(selectedTopic);

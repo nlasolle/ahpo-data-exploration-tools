@@ -280,7 +280,8 @@ function updateResultsTable(data, type) {
 
         //Open link in new tab
         window.open(
-            "http://henripoincare.fr/s/correspondance/item/" + omekaId
+            "http://henripoincare.fr/s/correspondance/item/" + omekaId,
+            "Détails sur la ressource"
         );
     });
 

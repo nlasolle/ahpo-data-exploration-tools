@@ -70,11 +70,11 @@ function initPersonInputData(persons) {
 }
 
 function initTopicInputData(topics) {
-    topicAutocomplete = new Autocomplete(document.getElementById('topicAutocompleteInput'), {
-        data: letterTopics,
+    topicAutocomplete = new Autocomplete(document.getElementById('distribTopicAutocompleteInput'), {
+        data: topics,
         threshold: THRESHOLD,
         maximumItems: MAX_ITEMS,
-        onSelectItem: ({ value }) => {
+        onSelectItem: ({ label, value }) => {
             selectedTopic = value;
             $('#generateTopicDistribution').prop('disabled', false);
         }
@@ -88,7 +88,7 @@ function initTopicInputData(topics) {
             selectedTopic = value;
             refreshSPARQLQuery();
         }
-    });*/
+    });
 
     letterTopicAutocomplete = new Autocomplete(document.getElementById('letterTopicAutocompleteInput'), {
         data: letterTopics,
@@ -98,7 +98,7 @@ function initTopicInputData(topics) {
             selectedTopic = value;
             refreshSPARQLQuery();
         }
-    });
+    });*/
 
 }
 

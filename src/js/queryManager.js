@@ -171,6 +171,7 @@ function getTopicsLabels(type) {
                 }
 
             }
+                initTopicInputData(topicsLabels);
 
             //initTopicInputData(topics);
             if (type == "ahpo:Article") {
