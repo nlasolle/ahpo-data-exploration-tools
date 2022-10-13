@@ -74,7 +74,7 @@ function generateArticleQuery() {
 
     //Then adding the constraint based on users input
     let authorsConstraint = addIriPropertyConstraint("articlePersonAutocompleteInput",
-        "ahpo:authoredBy");
+        "ahpo:authoredBy", "article");
 
     if (authorsConstraint) {
         body += authorsConstraint;
@@ -146,7 +146,7 @@ function generateLetterQuery() {
 
     //Then adding the constraint based on users input
     let senderConstraint = addIriPropertyConstraint("senderAutocompleteInput",
-        "ahpo:sentBy");
+        "ahpo:sentBy", "letter");
 
     if (senderConstraint) {
         body += senderConstraint;
@@ -154,7 +154,7 @@ function generateLetterQuery() {
 
     //Then adding the constraint based on users input
     let recipientConstraint = addIriPropertyConstraint("recipientAutocompleteInput",
-        "ahpo:sentTo");
+        "ahpo:sentTo", "letter");
 
     if (recipientConstraint) {
         body += recipientConstraint;
@@ -163,7 +163,9 @@ function generateLetterQuery() {
     body += addStringPropertyConstraint("letterTopicAutocompleteInput",
         "dcterms:subject", "letter");
 
-    body += "\t?letter ahpo:language \"" + $("#letterLanguageSelect option:selected").text() + "\" .\n";
+    if($("#letterLanguageSelect option:selected").text() != ALL) {
+        body += "\t?letter ahpo:language \"" + $("#letterLanguageSelect option:selected").text() + "\" .\n";
+    }
 
     let transcriptionConstraint = addStringPropertyContainsConstraint("letterTranscriptionInput", "transcription", selectedOperator);
 
@@ -174,14 +176,25 @@ function generateLetterQuery() {
 
     variables += " ?incipit";
 
-
-
     let dateBody = addDateConstraint("Letter",
         "ahpo:writingDate", "dateDeRedaction")
 
     if (dateBody) {
         body += dateBody;
     }
+
+
+    if($("#letterPageNumberValue").val()) {
+        let nbPageOperator = "<="
+        
+        if($("#letterPageNumber option:selected").val() == "after") {
+            nbPageOperator = ">="
+        } 
+        
+        body += "\t?letter ahpo:numberOfPages ?nbPages . \n" 
+              + "\tFILTER( xsd:integer(?nbPages) " + nbPageOperator + " " + $("#letterPageNumberValue").val() + ") . \n";
+    }
+    
 
     //Construct the full SPARQL query
     let query = PREFIX_HEADER + "\n" +
@@ -268,13 +281,13 @@ function addDateConstraint(typeName, property, varName) {
  * @param {*} property the property
  * @returns a list of constraints
  */
-function addIriPropertyConstraint(inputId, property) {
+function addIriPropertyConstraint(inputId, property, typeName) {
     let constraintList = "";
 
     $('.tagify__tag').each(function () {
 
         if ($(this).parent().siblings("#" + inputId).get(0)) {
-            let constraint = "\t?article " + property + " [rdfs:label  \"" + $(this).get(0).title + "\"] .\n";
+            let constraint = "\t?"+ typeName + " " + property + " [rdfs:label  \"" + $(this).get(0).title + "\"] .\n";
 
             if ($(this).hasClass("unwanted-item")) {
                 constraintList += "\tFILTER NOT EXISTS {" + constraint + "} .\n";

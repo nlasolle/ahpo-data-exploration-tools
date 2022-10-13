@@ -48,7 +48,7 @@ function initPersonInputData(persons) {
         }
     });*/
 
-    senderAutocomplete = new Autocomplete(document.getElementById('senderAutocompleteInput'), {
+    /*senderAutocomplete = new Autocomplete(document.getElementById('senderAutocompleteInput'), {
         data: persons,
         threshold: THRESHOLD,
         maximumItems: MAX_ITEMS,
@@ -66,7 +66,7 @@ function initPersonInputData(persons) {
             articleAuthor = { label, value };
             refreshSPARQLQuery();
         }
-    });
+    });*/
 }
 
 function initTopicInputData(topics) {

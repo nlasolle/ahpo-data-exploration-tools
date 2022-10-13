@@ -52,6 +52,7 @@ function getArticleAuthorsLabels() {
  * For each individual, the IRI and the label (using dcterms:title) are retrieved
  */
 function getPersonsLabels() {
+    let personsLabels = [];
     "use strict";
     const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
         "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
@@ -71,7 +72,7 @@ function getPersonsLabels() {
     request.onload = function () {
         if (request.status == 200) {
             let response = JSON.parse(this.response);
-            console.log(response.results.bindings);
+
             let bindings = response.results.bindings
             for (let i in bindings) {
                 let person = {
@@ -80,10 +81,12 @@ function getPersonsLabels() {
                     birthPlace: bindings[i].birthPlace ? bindings[i].birthPlace.value : null
                 };
                 persons.push(person);
+                personsLabels.push(person.label);
             }
-            console.log(persons);
 
             initPersonInputData(persons);
+            initTagsInput("senderAutocompleteInput", "Rechercher une persodnne", personsLabels);
+            initTagsInput("recipientAutocompleteInput", "Rechercher une persdonne", personsLabels);
 
         } else {
             console.log('An error occured when retrieving persons from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
