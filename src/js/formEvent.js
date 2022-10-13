@@ -65,7 +65,7 @@ $(document).ready(function () {
             $("#personBlock").hide();
         }
         else if (this.value == 'Person') {
-            $("#articleBlock").show();
+            $("#articleBlock").hide();
             $("#letterBlock").hide();
             $("#documentBlock").hide();
             $("#personBlock").show();

@@ -1,232 +1,254 @@
 const ALL = "Tout";
 
 function refreshSPARQLQuery() {
-query = "";
-checkEmptyInputs(ARTICLE_FORM);
+    query = "";
+    checkEmptyInputs(ARTICLE_FORM);
 
-//Generates the new SPARQL query
-switch ($("input[type=radio][name=typeRadioOptions]:checked").val()) {
+    //Generates the new SPARQL query
+    switch ($("input[type=radio][name=typeRadioOptions]:checked").val()) {
 
-    case 'Article': {
-        query = generateArticleQuery();
-        break;
-    }
-    case 'Document': {
-        query = generateDocumentQuery();
-        break;
-    }
-    case 'Letter': {
-        query = generateLetterQuery();
-        break;
-    }
-    case 'Person': {
-        query = generatePersonQuery();
-        break;
-    }
-    default: {
-        query = generateArticleQuery();
-    }
-}
+            case 'Article': {
+                query = generateArticleQuery();
+                break;
+            }
+            case 'Document': {
+                query = generateDocumentQuery();
+                break;
+            }
+            case 'Letter': {
+                query = generateLetterQuery();
+                break;
+            }
+            case 'Person': {
+                query = generatePersonQuery();
+                break;
+            }
+            default: {
+                query = generateArticleQuery();
+            }
+        }
 
-//Update the query text area
-if (query) {
-    updateQueryInput(query);
-}
+        //Update the query text area
+        if (query) {
+            updateQueryInput(query);
+        }
 
 }
 
 
 function generateDocumentQuery() {
-//Generate the query
-let variables = " ?document", body = "", optionalBody = "";
+    //Generate the query
+    let variables = " ?document", body = "", optionalBody = "";
 
-//Always include the label
-variables += " ?titre";
-optionalBody += "\tOPTIONAL { ?document rdfs:label ?titre } .\n";
+    //Always include the label
+    variables += " ?titre";
+    optionalBody += "\tOPTIONAL { ?document rdfs:label ?titre } .\n";
 
-//At least one constraint --> The document is an letter 
+    //At least one constraint --> The document is an letter 
 
-body += "\t?document a ahpo:Document . \n";
+    body += "\t?document a ahpo:Document . \n";
 
-//Construct the full SPARQL query
-let query = PREFIX_HEADER + "\n" +
-    "SELECT DISTINCT" + variables + " WHERE {\n" +
-    body +
-    optionalBody +
-    "\n}\n" +
-    "ORDER BY ?lang ?publicationDate";
+    //Construct the full SPARQL query
+    let query = PREFIX_HEADER + "\n" +
+        "SELECT DISTINCT" + variables + " WHERE {\n" +
+        body +
+        optionalBody +
+        "\n}\n" +
+        "ORDER BY ?lang ?publicationDate";
 
-return query;
+    return query;
 
 }
 
 function generateArticleQuery() {
 
-//Generate the query
-let variables = " ?article", body = "", optionalBody = "";
+    //Generate the query
+    let variables = " ?article", body = "", optionalBody = "";
 
-//Always include the label
-variables += " ?titre";
-optionalBody += "\tOPTIONAL { ?article rdfs:label ?titre } .\n";
+    //Always include the label
+    variables += " ?titre";
+    optionalBody += "\tOPTIONAL { ?article rdfs:label ?titre } .\n";
 
-//At least one constraint --> The document is an article
-body += "\t?article a ahpo:Article . \n";
+    //At least one constraint --> The document is an article
+    body += "\t?article a ahpo:Article . \n";
 
-//Then adding the constraint based on users input
-let authorsConstraint = addIriPropertyConstraint("articlePersonAutocompleteInput",
-    "ahpo:authoredBy", "article");
+    //Then adding the constraint based on users input
+    let authorsConstraint = addIriPropertyConstraint("articlePersonAutocompleteInput",
+        "ahpo:authoredBy", "article");
 
-if (authorsConstraint) {
-    body += authorsConstraint;
-}
+    if (authorsConstraint) {
+        body += authorsConstraint;
+    }
 
-variables += " ?auteur";
-optionalBody += "\tOPTIONAL { ?article ahpo:authoredBy [rdfs:label ?auteur] } .\n";
+    variables += " ?auteur";
+    optionalBody += "\tOPTIONAL { ?article ahpo:authoredBy [rdfs:label ?auteur] } .\n";
 
-body += addStringPropertyConstraint("articleTopicAutocompleteInput",
-    "dcterms:subject", "article");
-
-
-let titleConstraint = addStringPropertyContainsConstraint("articleTitleInput", "titre", selectedOperator);
-
-if (titleConstraint != "") {
-    body += "\tFILTER (" + titleConstraint + " ) . \n";
-}
-
-/* This value is an IRI, based on the label selected by the user in the input,
-   see queriesManager.js getJournalsLabel() function for details */
-if (selectedJournal) {
-    body += "\t?article ahpo:publishedIn <" + selectedJournal.value + "> .\n" +
-        "\t<" + selectedJournal.value + "> dcterms:title ?journal .\n";
-} else {
-    optionalBody += "\tOPTIONAL { ?article ahpo:publishedIn [dcterms:title ?journal] } .\n";
-}
-
-variables += " ?journal";
-variables += " ?dateDePublication";
-
-let dateBody = addDateConstraint("Article",
-    "ahpo:publicationDate", "dateDePublication")
-
-if (dateBody) {
-    body += dateBody;
-} else {
-    optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
-}
-
-if($("#articleLanguageSelect option:selected").text() != ALL) {
-    body += "\t?article ahpo:language \"" + $("#articleLanguageSelect option:selected").text() + "\"\n";
-}
+    body += addStringPropertyConstraint("articleTopicAutocompleteInput",
+        "dcterms:subject", "article");
 
 
-//Construct the full SPARQL query
-let query = PREFIX_HEADER + "\n" +
-    "SELECT DISTINCT" + variables + " WHERE {\n" +
-    body +
-    optionalBody +
-    "\n}\n" +
-    "ORDER BY ?dateDePublication";
+    let titleConstraint = addStringPropertyContainsConstraint("articleTitleInput", "titre", selectedOperator);
 
-return query;
+    if (titleConstraint != "") {
+        body += "\tFILTER (" + titleConstraint + " ) . \n";
+    }
+
+    /* This value is an IRI, based on the label selected by the user in the input,
+       see queriesManager.js getJournalsLabel() function for details */
+    if (selectedJournal) {
+        body += "\t?article ahpo:publishedIn <" + selectedJournal.value + "> .\n" +
+            "\t<" + selectedJournal.value + "> dcterms:title ?journal .\n";
+    } else {
+        optionalBody += "\tOPTIONAL { ?article ahpo:publishedIn [dcterms:title ?journal] } .\n";
+    }
+
+    variables += " ?journal";
+    variables += " ?dateDePublication";
+
+    let dateBody = addDateConstraint("Article",
+        "ahpo:publicationDate", "dateDePublication")
+
+    if (dateBody) {
+        body += dateBody;
+    } else {
+        optionalBody += "\tOPTIONAL { ?article ahpo:publicationDate ?dateDePublication } .";
+    }
+
+    if($("#articleLanguageSelect option:selected").text() != ALL) {
+        body += "\t?article ahpo:language \"" + $("#articleLanguageSelect option:selected").text() + "\"\n";
+    }
+
+
+    //Construct the full SPARQL query
+    let query = PREFIX_HEADER + "\n" +
+        "SELECT DISTINCT" + variables + " WHERE {\n" +
+        body +
+        optionalBody +
+        "\n}\n" +
+        "ORDER BY ?dateDePublication";
+
+    return query;
 }
 
 
 function generateLetterQuery() {
 
-//Generate the query
-let variables = " ?letter", body = "", optionalBody = "";
+    //Generate the query
+    let variables = " ?letter", body = "", optionalBody = "";
 
-//Always include the label
-variables += " ?titre";
-optionalBody += "\tOPTIONAL { ?letter rdfs:label ?titre } .\n";
-optionalBody += "\tOPTIONAL { ?letter ahpo:incipit ?incipit } .\n";
+    //Always include the label
+    variables += " ?titre";
+    optionalBody += "\tOPTIONAL { ?letter rdfs:label ?titre } .\n";
+    optionalBody += "\tOPTIONAL { ?letter ahpo:incipit ?incipit } .\n";
 
-//At least one constraint --> The document is an letter
-body += "\t?letter a ahpo:Letter . \n";
+    //At least one constraint --> The document is an letter
+    body += "\t?letter a ahpo:Letter . \n";
 
-//Then adding the constraint based on users input
-let senderConstraint = addIriPropertyConstraint("senderAutocompleteInput",
-    "ahpo:sentBy", "letter");
+    //Then adding the constraint based on users input
+    let senderConstraint = addIriPropertyConstraint("senderAutocompleteInput",
+        "ahpo:sentBy", "letter");
 
-if (senderConstraint) {
-    body += senderConstraint;
-}
+    if (senderConstraint) {
+        body += senderConstraint;
+    }
 
-//Then adding the constraint based on users input
-let recipientConstraint = addIriPropertyConstraint("recipientAutocompleteInput",
-    "ahpo:sentTo", "letter");
+    //Then adding the constraint based on users input
+    let recipientConstraint = addIriPropertyConstraint("recipientAutocompleteInput",
+        "ahpo:sentTo", "letter");
 
-if (recipientConstraint) {
-    body += recipientConstraint;
-}
+    if (recipientConstraint) {
+        body += recipientConstraint;
+    }
 
-let quotedPeopleConstraint = addIriPropertyConstraint("quotedPeopleInput",
-    "ahpo:citeName", "letter");
+    let quotedPeopleConstraint = addIriPropertyConstraint("quotedPeopleInput",
+        "ahpo:citeName", "letter");
 
-if (quotedPeopleConstraint) {
-    body += quotedPeopleConstraint;
-}
+    if (quotedPeopleConstraint) {
+        body += quotedPeopleConstraint;
+    }
 
-let quotedPeopleCommentConstraint = addIriPropertyConstraint("quotedPeopleCommentInput",
-    "ahpo:citeNameApparat", "letter");
+    let quotedPeopleCommentConstraint = addIriPropertyConstraint("quotedPeopleCommentInput",
+        "ahpo:citeNameApparat", "letter");
 
-if (quotedPeopleCommentConstraint) {
-    body += quotedPeopleCommentConstraint;
-}
+    if (quotedPeopleCommentConstraint) {
+        body += quotedPeopleCommentConstraint;
+    }
 
-let addStringPropertyConstraintConstraint = addIriPropertyConstraint("letterArgotInput",
-    "ahpo:citeArgot", "letter");
+    let addStringPropertyConstraintConstraint = addIriPropertyConstraint("letterArgotInput",
+        "ahpo:citeArgot", "letter");
 
-if (addStringPropertyConstraintConstraint) {
-    body += addStringPropertyConstraintConstraint;
-}
+    if (addStringPropertyConstraintConstraint) {
+        body += addStringPropertyConstraintConstraint;
+    }
 
-body += addStringPropertyConstraint("letterTopicAutocompleteInput",
-    "dcterms:subject", "letter");
+    body += addStringPropertyConstraint("letterTopicAutocompleteInput",
+        "dcterms:subject", "letter");
 
-if($("#letterLanguageSelect option:selected").text() != ALL) {
-    body += "\t?letter ahpo:language \"" + $("#letterLanguageSelect option:selected").text() + "\" .\n";
-}
+    if($("#letterLanguageSelect option:selected").text() != ALL) {
+        body += "\t?letter ahpo:language \"" + $("#letterLanguageSelect option:selected").text() + "\" .\n";
+    }
 
-let transcriptionConstraint = addStringPropertyContainsConstraint("letterTranscriptionInput", "transcription", selectedOperator);
+    let transcriptionConstraint = addStringPropertyContainsConstraint("letterTranscriptionInput", "transcription", selectedOperator);
 
-if (transcriptionConstraint != "") {
-    body += "\t?letter o:media [o-cnt:chars ?transcription] .\n";
-    body += "\tFILTER (" + transcriptionConstraint + " ) . \n";
-}
+    if (transcriptionConstraint != "") {
+        body += "\t?letter o:media [o-cnt:chars ?transcription] .\n";
+        body += "\tFILTER (" + transcriptionConstraint + " ) . \n";
+    }
 
-variables += " ?incipit";
+    variables += " ?incipit";
 
-let dateBody = addDateConstraint("Letter",
-    "ahpo:writingDate", "dateDeRedaction")
+    let dateBody = addDateConstraint("Letter",
+        "ahpo:writingDate", "dateDeRedaction")
 
-if (dateBody) {
-    body += dateBody;
-}
+    if (dateBody) {
+        body += dateBody;
+    }
 
 
-if($("#letterPageNumberValue").val()) {
-    let nbPageOperator = "<="
-    
-    if($("#letterPageNumber option:selected").val() == "after") {
-        nbPageOperator = ">="
-    } 
-    
-    body += "\t?letter ahpo:numberOfPages ?nbPages . \n" 
-          + "\tFILTER( xsd:integer(?nbPages) " + nbPageOperator + " " + $("#letterPageNumberValue").val() + ") . \n";
-}
+    if($("#letterPageNumberValue").val()) {
+        let nbPageOperator = "<="
+        
+        if($("#letterPageNumber option:selected").val() == "after") {
+            nbPageOperator = ">="
+        } 
+        
+        body += "\t?letter ahpo:numberOfPages ?nbPages . \n" 
+              + "\tFILTER( xsd:integer(?nbPages) " + nbPageOperator + " " + $("#letterPageNumberValue").val() + ") . \n";
+    }
 
 
 //Construct the full SPARQL query
-let query = PREFIX_HEADER + "\n" +
-    "SELECT DISTINCT" + variables + " WHERE {\n" +
-    body +
-    optionalBody +
-    "}\n" +
-    "ORDER BY ?dateDeRedaction";
+    let query = PREFIX_HEADER + "\n" +
+        "SELECT DISTINCT" + variables + " WHERE {\n" +
+        body +
+        optionalBody +
+        "}\n" +
+        "ORDER BY ?dateDeRedaction";
 
-return query;
+    return query;
 }
+
+function generatePersonQuery() {
+
+    //Generate the query
+    let variables = " ?person ?label", body = "", optionalBody = "";
+
+    optionalBody += "\tOPTIONAL { ?person rdfs:label ?label } .\n";
+
+    //At least one constraint --> The document is an letter
+    body += "\t?person a ahpo:Person . \n";
+
+
+    //Construct the full SPARQL query
+    let query = PREFIX_HEADER + "\n" +
+        "SELECT DISTINCT" + variables + " WHERE {\n" +
+        body +
+        optionalBody +
+        "}\n";
+
+    return query;
+}
+
 
 
 function addStringPropertyConstraint(inputId, property, typeName) {
