@@ -24,7 +24,6 @@ $(document).ready(function () {
     $("#documentBlock").hide();
     $("#personBlock").hide();
 
-
     clearInputValues();
 
     articleAuthor = null;
@@ -132,6 +131,7 @@ $(document).ready(function () {
 
 
     getJournalsLabels();
+    getArgotsLabels();
     articleTopics = getTopicsLabels("ahpo:Article");
     letterTopics = getTopicsLabels("ahpo:Letter");
 

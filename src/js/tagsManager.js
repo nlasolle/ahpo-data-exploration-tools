@@ -7,18 +7,24 @@ function initTagsInput(inputId, placeholderText, data) {
     if (!data) {
         // initialize Tagify on the above input node reference
         var tagify = new Tagify(input, {
-            placeholder: placeholderText
-        });
+            placeholder: placeholderText,
+            dropdown : {
+            enabled: 1 // show suggestions dropdown after 1 typed character
+        }
+    });
 
     } else {
         var tagify = new Tagify(input, {
             placeholder: placeholderText,
-            whitelist: data
+            whitelist: data,
+            dropdown : {
+                enabled: 1 // show suggestions dropdown after 1 typed character
+            }
         });
     }
     
     tagify.on('click', onTagClick)
-        .on('remove', onRemoveTag);
+    .on('remove', onRemoveTag);
 }
 
 // invalid tag added callback

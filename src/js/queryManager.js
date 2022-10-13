@@ -1,5 +1,5 @@
 
-var articlePersons = [], persons = [], articleTopics = [], letterTopics = [];
+var articlePersons = [], persons = [], argots = [], articleTopics = [], letterTopics = [];
 
 /**
  * Launch a SPARQL query to retrieve all individuals from Henri Poincaré corpus graph.
@@ -40,7 +40,7 @@ function getArticleAuthorsLabels() {
             initTagsInput("articlePersonAutocompleteInput", "Rechercher une personne", authorsLabels);
 
         } else {
-            console.log('An error occured when retrieving persons from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
+            console.log('An error occured when retrieving articles authors from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
         }
     };
 
@@ -85,8 +85,10 @@ function getPersonsLabels() {
             }
 
             initPersonInputData(persons);
-            initTagsInput("senderAutocompleteInput", "Rechercher une persodnne", personsLabels);
-            initTagsInput("recipientAutocompleteInput", "Rechercher une persdonne", personsLabels);
+            initTagsInput("senderAutocompleteInput", "Rechercher une personne", personsLabels);
+            initTagsInput("recipientAutocompleteInput", "Rechercher une personne", personsLabels);
+            initTagsInput("quotedPeopleInput", "Rechercher une personne", personsLabels);
+            initTagsInput("quotedPeopleCommentInput", "Rechercher une personne", personsLabels);
 
         } else {
             console.log('An error occured when retrieving persons from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
@@ -95,6 +97,50 @@ function getPersonsLabels() {
 
     request.send();
 }
+
+/**
+ * Launch a SPARQL query to retrieve all argot words from Henri Poincaré corpus graph.
+ * For each resource, the IRI and the label (using dcterms:title) are retrieved
+ */
+function getArgotsLabels() {
+    let argotsLabels = [];
+    "use strict";
+    const query = "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+        "PREFIX ahpo: <http://e-hp.ahp-numerique.fr/ahpo#>\n" +
+        "SELECT DISTINCT ?argot ?label ?birthPlace WHERE {\n " +
+        "   ?l ahpo:citeArgot ?argot . \n" +
+        "   ?argot dcterms:title ?label\n" +
+        "}";
+
+    var request = new XMLHttpRequest();
+
+    request.open("GET", SPARQL_ENDPOINT + "?query=" + encodeURIComponent(query), true);
+    request.setRequestHeader("Content-type", "application/sparql-query");
+
+    request.onload = function () {
+        if (request.status == 200) {
+            let response = JSON.parse(this.response);
+
+            let bindings = response.results.bindings
+            for (let i in bindings) {
+                let argot = {
+                    label: bindings[i].label.value,
+                    value: bindings[i].argot.value
+                };
+                argots.push(argot);
+                argotsLabels.push(argot.label);
+            }
+
+            initTagsInput("letterArgotInput", "Rechercher un terme d'argot", argotsLabels);
+
+        } else {
+            console.log('An error occured when retrieving argot words from the SPARQL endpoint with URL ' + SPARQL_ENDPOINT);
+        }
+    };
+
+    request.send();
+}
+
 
 /**
  * Launch a SPARQL query to retrieve all journals (scientifics journals) and books from Henri Poincaré corpus graph.
